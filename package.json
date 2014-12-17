@@ -1,0 +1,25 @@
+{
+  "name": "doiuse.com",
+  "version": "1.0.0",
+  "description": "Doiuse website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anandthakker/doiuse.com.git"
+  },
+  "author": "Anand Thakker <vestibule@anandthakker.net> (http://anandthakker.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/anandthakker/doiuse.com/issues"
+  },
+  "homepage": "https://github.com/anandthakker/doiuse.com",
+  "dependencies": {
+    "concat-stream": "^1.4.7",
+    "doiuse": "^0.2.0",
+    "style-stream": "^1.0.1",
+    "through2": "^0.6.3"
+  }
+}
