@@ -5,6 +5,11 @@ var concat = require('concat-stream');
 var through = require('through2');
 var styles = require('style-stream');
 var doiuse = require('doiuse/stream');
+var defaultBrowsers = require('doiuse').default;
+var ecstatic = require('ecstatic');
+
+
+var stat = ecstatic({ root: __dirname + '/public' });
 
 var server = http.createServer(function(req, res) {
   
@@ -17,42 +22,41 @@ var server = http.createServer(function(req, res) {
   // Response is ld-json unsupported feature usage data, as provided by doiuse.
   //
   if (req.method == 'POST') {
-    req.pipe(limit(1e6, function(){request.connection.destroy()}))
+    req
+    .pipe(limit(1e6, function(){request.connection.destroy()}))
     .pipe(concat({encoding: 'string'}, function(data) {
       var body = JSON.parse(data);
       
+      if(body.browsers.trim().length === 0) body.browsers = defaultBrowsers;
       var doi = doiuse(body.browsers, {json: true})
       doi.pipe(through.obj(pruneFeatureUsage))
         .pipe(res);
 
       if(body.url) {
-        styles({url: body.url}).pipe(output);
+        styles({url: body.url}).pipe(doi);
       } else if(body.css) {
         doi.end(body.css)
       }
     }));
+  }
+  else {
+    stat(req, res);
   }
 })
 
 server.listen(process.env.PORT || Number(process.argv[2]) || 3000);
 
 
-
+// 
 function pruneFeatureUsage(usageInfo, enc, next) {
-  for(k in usageInfo) {
-    console.log(k);
-  }
   if(usageInfo && usageInfo.featureData) delete usageInfo.featureData.caniuseData.stats
-  next(null, JSON.stringify(usageInfo));
+  console.log(usageInfo);
+  next(null, JSON.stringify(usageInfo) + '\n');
 }
 
-/**
- * limit - limit input and fire a callback when reached.
- *  
- * @param  {number} size    max bytes to pass through. 
- * @param  {~} onLimit called when max is reached, with (bytesSoFar, lastChunk). Return a value > current limit to keep going.  Otherwise, errors and ends the stream.
- * @return {Stream}          
- */ 
+// limit - request stream filter to limit input and fire a callback when reached.
+// onLimit(bytesSoFar, lastChunk): return a value > current limit to keep going.
+// Otherwise, error and ends the stream.
 function limit(size, onLimit) {  
   var soFar = 0;
   return through(function(chunk, enc, next) {

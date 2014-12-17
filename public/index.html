@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>doiuse???</title>
+  </head>
+  <style media="screen">
+    body > * {
+      max-width: 50em;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  
+    * + * {
+      margin-top: 1em;
+    }
+    
+    body {
+      font-size: 21px;
+      font-family: monospace;
+    }
+
+
+    header { text-align: center; }
+    
+    .results *:last-child { 
+      padding-bottom: 1em;
+      border-bottom: 2px solid currentcolor;
+    }
+
+    h1 {
+      display: inline-block;
+      text-align: left;
+    }
+    h1 input[type="text"] {
+      border: none;
+      border-bottom: 1px solid currentcolor;
+      font-size: .875em;
+      width: 21em;
+    }
+    h1 button {
+      font-size: .5em;
+      background: none;
+      border: 1px solid currentcolor;
+      border-radius: 3px;
+      font-family: inherit;
+      font-weight: bold;
+    }
+    
+    
+    label {
+      display: block;
+    }
+    
+    textarea {
+      font-size: 2em;
+      display: block;
+      width: 100%;
+    }
+    
+    input[name="url"] {
+      font-size: inherit;
+      width: 100%;
+    }
+    
+    
+  </style>
+  <body>
+    <header>
+      <h1>
+        Do I use $hit that breaks in...
+        <nobr><input type="text" name="browsers" value="" placeholder="> 1%,last 2 versions,Firefox ESR,Opera 12.1">?</nobr>
+        <button disabled>&rarr; Tell me.</button>
+      </h1>
+    </header>
+    
+    <section class="results">
+      
+    </section>
+    <section class="input">
+      <label>
+        Paste URL:
+        <input type="text" name="url" value="" placeholder="http://www.w3.org/standards/">
+      </label>
+      <label>
+        Paste HTML or CSS:
+        <textarea name="css" rows="15" cols="40"></textarea>
+      </label>
+    </section>
+  </body>
+  
+  <script charset="utf-8">
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      
+      var data = {};
+      var button = document.querySelector('button');
+      var results = document.querySelector('.results');
+
+
+      bind(data, ['browsers', 'url', 'css'], function(el, val, prop) {
+        if((data.url.trim().length + data.css.trim().length) > 0) {
+          button.removeAttribute('disabled');
+        }
+        else {
+          button.setAttribute('disabled', true);
+        }
+      });
+      
+      
+      button.addEventListener('click', function() {
+        post(JSON.stringify(data), function(usages) {
+          usages = usages
+            .trim()
+            .split('\n')
+            .map(function(s) {
+              console.log('JSON')
+              console.log(s);
+              return JSON.parse(s);
+            })
+            .map(function(usage) {
+              return [
+                '<div class="unsupported">',
+                  usage.message.replace(/^[^:]*:/,''),
+                '</div>'
+              ].join('')
+            });
+          results.innerHTML = usages.join('');
+        })
+      });
+
+
+
+    }); // DOMContentLoaded
+    
+
+
+
+    function bind(object, name, property, cb) {
+      if(typeof property === 'undefined') { property = name; }
+      if(typeof cb === 'undefined') {
+        cb = property;
+        property = name;
+      }
+      
+      if(Array.isArray(name)) {
+        name.forEach(function(name) { bind(object,name,cb); });
+      }
+      else {
+        var el = document.querySelector('[name="'+name+'"]');
+        el.addEventListener('keyup', update.bind(null, cb));
+        update();
+        function update(cb) {
+          object[property] = el.value;
+          if(typeof cb === 'function') { cb(el, el.value, property); }
+        }
+      }
+    }
+    
+
+    function post(data, success) {
+      request = new XMLHttpRequest();
+      request.open('POST', '/', true);
+      
+      request.onload = function() {
+        if (request.status >= 200 && request.status < 400){
+          success(request.responseText);
+          
+        } else {
+          console.error("Server responded with error", request);
+        }
+      };
+      
+      request.onerror = function(e) {
+        console.error("Error making request.",e);
+      };
+      
+      request.send(data);
+    }
+    
+  </script>
+</html>
