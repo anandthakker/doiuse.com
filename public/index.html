@@ -19,9 +19,47 @@
       font-size: 21px;
       font-family: monospace;
     }
+    
+    a,
+    a:visited {
+      color: rgb(0, 100, 100);
+    }
+    
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
 
 
     header { text-align: center; }
+    
+    
+    body > footer {
+      width: 100%;
+      border-top: 2px solid black;
+    }
+
+    .credits {
+      font-size: .875em;
+      text-align: justify;
+    }
+    .credits:after {
+      content: ' ';
+      display: inline-block;
+      width: 100%;
+      height: 1px;
+      visibility: hidden;
+    }
+    .credits li {
+      margin-top: 0;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .credits ul li:not(:last-child):after {
+      content: ',';
+    }
     
     .results *:last-child { 
       padding-bottom: 1em;
@@ -89,6 +127,23 @@
         <textarea name="css" rows="15" cols="40"></textarea>
       </label>
     </section>
+    
+    <footer>
+      <ul class="credits">
+        <li>By <a href="http://anand.codes">Anand Thakker</a>.</li>
+        <li>Built with <a href="https://github.com/anandthakker/doiuse">doiuse</a>,
+          owing much to:
+          <ul>
+            <li><a href="http://caniuse.com">caniuse.com</a></li>
+            <li><a href="https://github.com/postcss/autoprefixer">autoprefixer</a></li>
+            <li><a href="https://github.com/postcss">postcss</a></li>
+            <li><a href="https://github.com/substack/browserify">browserify</a></li>
+          </ul>
+        </li>
+        
+        <li><a href="https://github.com/anandthakker/doiuse.com">Site source on Github</a>.</li>
+      </ul>
+    </footer>
   </body>
   
   <script src="bundle.js"></script>
