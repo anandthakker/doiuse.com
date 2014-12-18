@@ -36,6 +36,15 @@
       padding: 0;
     }
     
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      font-size: .875em;
+    }
+    thead {
+      display: table-header-group; /* h5bp.com/t */
+      font-weight: bold;
+    }
 
 
     header { text-align: center; }
@@ -66,10 +75,24 @@
       content: ',';
     }
     
-    .results *:last-child { 
+    .results td {
+      vertical-align: top;
+    }
+    .results tr:last-child { 
       padding-bottom: 1em;
       border-bottom: 2px solid currentcolor;
     }
+    .results tr:nth-child(even) {
+      background: #eee;
+    }
+    .results td:nth-child(1) {
+      width: 25%;
+    }
+    .results td:nth-child(2) {
+      width: 75%;
+      overflow-x: scroll;
+    }
+    
 
     h1 {
       display: inline-block;
@@ -126,9 +149,20 @@
         <input type="text" name="url" value="" placeholder="http://www.w3.org/standards/">
       </label>
       
-      <section class="results">
-        
-      </section>
+      <table>
+        <thead>
+          <tr>
+            <td>
+              Feature
+            </td>
+            <td>
+              Browsers Lacking Support
+            </td>
+          </tr>
+        </thead>
+        <tbody class="results">
+        </tbody>
+      </table>
       
       <label>
         Paste HTML or CSS:
