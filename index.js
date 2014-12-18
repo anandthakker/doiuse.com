@@ -7,11 +7,9 @@ var through = require('through2');
 var styles = require('style-stream');
 var doiuse = require('doiuse/stream');
 var defaultBrowsers = require('doiuse').default;
-var ecstatic = require('ecstatic');
 var trumpet = require('trumpet');
 
 var render = require('./lib/render');
-var stat = ecstatic({ root: __dirname + '/public' });
 
 var server = http.createServer(function(req, res) {
   
@@ -41,19 +39,18 @@ var server = http.createServer(function(req, res) {
   }
   else {
     var args = qs.parse(req.url.split('?').splice(1).join('?'));
+    var index = trumpet();
+    
     if(args.url) {
       // prerender results.
-      var main = trumpet();
-      var results = main.select('.results').createWriteStream();
       doiuseStream(args)
         .pipe(through.obj(renderDoiuseResult))
-        .pipe(results);
-        
-      fs.createReadStream(__dirname + '/public/index.html')
-        .pipe(main)
-        .pipe(res);
+        .pipe(index.select('.results').createWriteStream());
     }
-    else stat(req, res);
+    
+    fs.createReadStream(__dirname + '/public/index.html')
+    .pipe(index)
+    .pipe(res);
   }
 })
 
