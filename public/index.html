@@ -103,7 +103,9 @@
       var results = document.querySelector('.results');
 
       doiuse.bindElement(options, ['browsers', 'url', 'css'], function(el, val, prop) {
-        if((options.url.trim().length + options.css.trim().length) > 0)
+        var url = options.url.trim().length;
+        var css = options.css.trim().length
+        if(url ? !css : css) // xor
           button.removeAttribute('disabled');
         else
           button.setAttribute('disabled', true);
