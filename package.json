@@ -15,12 +15,20 @@
   "bugs": {
     "url": "https://github.com/anandthakker/doiuse.com/issues"
   },
-  "homepage": "https://github.com/anandthakker/doiuse.com",
+  "homepage": "http://doiuse.com",
+  "browser": "./browser.js",
+  "browserify": { "transform": [ "brfs" ] },
   "dependencies": {
     "concat-stream": "^1.4.7",
     "doiuse": "^0.2.0",
     "ecstatic": "^0.5.8",
+    "mustache": "^0.8.2",
     "style-stream": "^1.0.1",
-    "through2": "^0.6.3"
+    "through2": "^0.6.3",
+    "xhr": "^2.0.0"
+  },
+  "devDependencies": {
+    "brfs": "^1.2.0",
+    "watchify": "^2.2.1"
   }
 }

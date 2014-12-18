@@ -24,18 +24,24 @@ var server = http.createServer(function(req, res) {
   if (req.method == 'POST') {
     req
     .pipe(limit(1e6, function(){request.connection.destroy()}))
-    .pipe(concat({encoding: 'string'}, function(data) {
-      var body = JSON.parse(data);
-      
-      if(body.browsers.trim().length === 0) body.browsers = defaultBrowsers;
-      var doi = doiuse(body.browsers, {json: true})
-      doi.pipe(through.obj(pruneFeatureUsage))
+    .pipe(concat(function(data) {
+      try {
+        var body = JSON.parse(data);
+        
+        if(body.browsers.trim().length === 0) body.browsers = defaultBrowsers;
+        var doi = doiuse(body.browsers, {json: true})
+        doi.pipe(through.obj(pruneFeatureUsage))
         .pipe(res);
-
-      if(body.url) {
-        styles({url: body.url}).pipe(doi);
-      } else if(body.css) {
-        doi.end(body.css)
+        
+        if(body.url) {
+          styles({url: body.url}).pipe(doi);
+        } else if(body.css) {
+          doi.end(body.css)
+        }
+      } catch(e) {
+        console.error(e);
+        res.statusCode = 500;
+        res.end('Error');
       }
     }));
   }
@@ -53,7 +59,6 @@ server.listen(port, function() {
 // 
 function pruneFeatureUsage(usageInfo, enc, next) {
   if(usageInfo && usageInfo.featureData) delete usageInfo.featureData.caniuseData.stats
-  console.log(usageInfo);
   next(null, JSON.stringify(usageInfo) + '\n');
 }
 

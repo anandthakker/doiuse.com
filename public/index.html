@@ -74,14 +74,16 @@
       </h1>
     </header>
     
-    <section class="results">
-      
-    </section>
-    <section class="input">
+    <section>
       <label>
         Paste URL:
         <input type="text" name="url" value="" placeholder="http://www.w3.org/standards/">
       </label>
+      
+      <section class="results">
+        
+      </section>
+      
       <label>
         Paste HTML or CSS:
         <textarea name="css" rows="15" cols="40"></textarea>
@@ -89,94 +91,31 @@
     </section>
   </body>
   
+  <script src="bundle.js"></script>
   <script charset="utf-8">
+
+    var doiuse = require('doiuse-browser');
+
     document.addEventListener('DOMContentLoaded', function() {
       
-      
-      var data = {};
+      var options = {};
       var button = document.querySelector('button');
       var results = document.querySelector('.results');
 
-
-      bind(data, ['browsers', 'url', 'css'], function(el, val, prop) {
-        if((data.url.trim().length + data.css.trim().length) > 0) {
+      doiuse.bindElement(options, ['browsers', 'url', 'css'], function(el, val, prop) {
+        if((options.url.trim().length + options.css.trim().length) > 0)
           button.removeAttribute('disabled');
-        }
-        else {
+        else
           button.setAttribute('disabled', true);
-        }
       });
-      
       
       button.addEventListener('click', function() {
-        post(JSON.stringify(data), function(usages) {
-          usages = usages
-            .trim()
-            .split('\n')
-            .map(function(s) {
-              console.log('JSON')
-              console.log(s);
-              return JSON.parse(s);
-            })
-            .map(function(usage) {
-              return [
-                '<div class="unsupported">',
-                  usage.message.replace(/^[^:]*:/,''),
-                '</div>'
-              ].join('')
-            });
-          results.innerHTML = usages.join('');
-        })
+        doiuse.process(options, function(err, result) {
+          results.innerHTML = result;
+        });
       });
 
-
-
     }); // DOMContentLoaded
-    
-
-
-
-    function bind(object, name, property, cb) {
-      if(typeof property === 'undefined') { property = name; }
-      if(typeof cb === 'undefined') {
-        cb = property;
-        property = name;
-      }
-      
-      if(Array.isArray(name)) {
-        name.forEach(function(name) { bind(object,name,cb); });
-      }
-      else {
-        var el = document.querySelector('[name="'+name+'"]');
-        el.addEventListener('keyup', update.bind(null, cb));
-        update();
-        function update(cb) {
-          object[property] = el.value;
-          if(typeof cb === 'function') { cb(el, el.value, property); }
-        }
-      }
-    }
-    
-
-    function post(data, success) {
-      request = new XMLHttpRequest();
-      request.open('POST', '/', true);
-      
-      request.onload = function() {
-        if (request.status >= 200 && request.status < 400){
-          success(request.responseText);
-          
-        } else {
-          console.error("Server responded with error", request);
-        }
-      };
-      
-      request.onerror = function(e) {
-        console.error("Error making request.",e);
-      };
-      
-      request.send(data);
-    }
     
   </script>
 </html>
