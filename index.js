@@ -10,11 +10,14 @@ var defaultBrowsers = require('doiuse').default;
 var trumpet = require('trumpet');
 var ecstatic = require('ecstatic');
 
-var stat = ecstatic({root: __dirname + '/public',gzip: true});
 var render = require('./lib/render');
+var logmem = require('./lib/logmem');
+
+var stat = ecstatic({root: __dirname + '/public',gzip: true});
+
 
 var server = http.createServer(function(req, res) {
-  
+  logmem();
   // Query for browser support analysis:
   // POST / { "browsers": ["ie >= 8","last 2 versions"], "url":"http://caniuse.com" }
   // or
