@@ -44,7 +44,10 @@ var server = http.createServer(function(req, res) {
   }
 })
 
-server.listen(process.env.PORT || Number(process.argv[2]) || 3000);
+var port = process.env.PORT || Number(process.argv[2]) || 3000;
+server.listen(port, function() {
+  console.log('doiuse:', 'listening on ',port);
+});
 
 
 // 
