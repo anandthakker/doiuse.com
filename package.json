@@ -25,6 +25,7 @@
   "dependencies": {
     "concat-stream": "^1.4.7",
     "doiuse": "^0.2.0",
+    "ecstatic": "^0.5.8",
     "mustache": "^0.8.2",
     "style-stream": "^1.0.1",
     "through2": "^0.6.3",

@@ -17,14 +17,13 @@ function processCss(options, cb) {
     if(err || !(resp.statusCode >= 200 && resp.statusCode < 400)) {
       return cb(err, resp);
     }
-    console.log(resp);
-    console.log(template);
-    cb(null, body
+    var result = (!body) ? '' : body
       .trim()
       .split('\n')
       .map(function(s) { return JSON.parse(s); })
       .map(render)
-      .join('')
-    );
+      .join('');
+    
+    cb(null, result);
   });
 }

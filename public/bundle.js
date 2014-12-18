@@ -23,7 +23,17 @@ function bind(object, name, property, cb) {
   }
 }
 
-},{}],"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js":[function(require,module,exports){
+},{}],"/Users/anand/dev/doiuse.com/lib/render.js":[function(require,module,exports){
+
+var mustache = require('mustache');
+
+
+module.exports = render;
+
+var template = "<div>\n  {{message}}\n</div>\n";
+function render(usage) { return mustache.render(template, usage); }
+
+},{"mustache":"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js"}],"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js":[function(require,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -913,15 +923,13 @@ module.exports = function (headers) {
 }
 },{"for-each":"/Users/anand/dev/doiuse.com/node_modules/xhr/node_modules/parse-headers/node_modules/for-each/index.js","trim":"/Users/anand/dev/doiuse.com/node_modules/xhr/node_modules/parse-headers/node_modules/trim/index.js"}],"doiuse-browser":[function(require,module,exports){
 var xhr = require('xhr');
-var mustache = require('mustache');
-
+var render = require('./lib/render');
 
 module.exports = {
   bindElement: require('./lib/bind'),
   process: processCss
 }
 
-var template = "<div>\n  {{message}}\n</div>\n";
 function processCss(options, cb) {
   xhr({
     body: JSON.stringify(options),
@@ -933,16 +941,15 @@ function processCss(options, cb) {
     if(err || !(resp.statusCode >= 200 && resp.statusCode < 400)) {
       return cb(err, resp);
     }
-    console.log(resp);
-    console.log(template);
-    cb(null, body
+    var result = (!body) ? '' : body
       .trim()
       .split('\n')
       .map(function(s) { return JSON.parse(s); })
-      .map(function(usage) { return mustache.render(template, usage); } )
-      .join('')
-    );
+      .map(render)
+      .join('');
+    
+    cb(null, result);
   });
 }
 
-},{"./lib/bind":"/Users/anand/dev/doiuse.com/lib/bind.js","mustache":"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js","xhr":"/Users/anand/dev/doiuse.com/node_modules/xhr/index.js"}]},{},[]);
+},{"./lib/bind":"/Users/anand/dev/doiuse.com/lib/bind.js","./lib/render":"/Users/anand/dev/doiuse.com/lib/render.js","xhr":"/Users/anand/dev/doiuse.com/node_modules/xhr/index.js"}]},{},[]);

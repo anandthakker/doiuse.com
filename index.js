@@ -8,7 +8,9 @@ var styles = require('style-stream');
 var doiuse = require('doiuse/stream');
 var defaultBrowsers = require('doiuse').default;
 var trumpet = require('trumpet');
+var ecstatic = require('ecstatic');
 
+var stat = ecstatic({root: __dirname + '/public',gzip: true});
 var render = require('./lib/render');
 
 var server = http.createServer(function(req, res) {
@@ -37,7 +39,7 @@ var server = http.createServer(function(req, res) {
       }
     }));
   }
-  else {
+  else if(/^\/(\?.*)$/.test(req.url)) {
     var args = qs.parse(req.url.split('?').splice(1).join('?'));
     var index = trumpet();
     
@@ -51,6 +53,9 @@ var server = http.createServer(function(req, res) {
     fs.createReadStream(__dirname + '/public/index.html')
     .pipe(index)
     .pipe(res);
+  }
+  else {
+    stat(req, res);
   }
 })
 
@@ -69,7 +74,15 @@ function doiuseStream(options) {
   if(options.url && options.url.trim().length > 0) {
     styles({url: options.url}).pipe(doi);
   } else {
-    doi.end(options.css)
+    var input = options.css || ''
+    // hacky html vs css test
+    if(/^[\s]*</.test(input)) {
+      console.log('HTML input');
+      var style = styles({basepath: '/dev/null'});
+      style.pipe(doi);
+      style.end(input);
+    }
+    else doi.end(input)
   }
   
   return doi;
