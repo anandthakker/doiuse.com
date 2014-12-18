@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "concat-stream": "^1.4.7",
+    "debug": "^2.1.0",
     "doiuse": "^0.2.0",
     "ecstatic": "^0.5.8",
     "mustache": "^0.8.2",

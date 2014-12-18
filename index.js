@@ -10,6 +10,10 @@ var defaultBrowsers = require('doiuse').default;
 var trumpet = require('trumpet');
 var ecstatic = require('ecstatic');
 
+var debug = require('debug')('doiuse:server'),
+    debugUsage = require('debug')('doiuse:server:usage');
+
+
 var render = require('./lib/render');
 var logmem = require('./lib/logmem');
 
@@ -18,6 +22,8 @@ var stat = ecstatic({root: __dirname + '/public',gzip: true});
 
 var server = http.createServer(function(req, res) {
   logmem();
+  debug(req.method, req.url);
+
   // Query for browser support analysis:
   // POST / { "browsers": ["ie >= 8","last 2 versions"], "url":"http://caniuse.com" }
   // or
@@ -75,9 +81,11 @@ function doiuseStream(options) {
   var doi = doiuse(options.browsers, {json: true})
   
   if(options.url && options.url.trim().length > 0) {
+    debug('from url', options.url)
     styles({url: options.url}).pipe(doi);
   } else {
     var input = options.css || ''
+    debug('from pasted code', input.length)
     // hacky html vs css test
     if(/^[\s]*</.test(input)) {
       console.log('HTML input');
@@ -97,8 +105,16 @@ function renderDoiuseResult(usageInfo, enc, next) {
 }
 
 function pruneFeatureUsage(usageInfo, enc, next) {
-  if(usageInfo && usageInfo.featureData) delete usageInfo.featureData.caniuseData.stats
-  next(null, JSON.stringify(usageInfo) + '\n');
+  usageInfo.featureData = usageInfo.featureData || {}
+  var data = {
+    message: usageInfo.message,
+    error: usageInfo.error,
+    feature: usageInfo.feature,
+    title: usageInfo.featureData.title,
+    missing: usageInfo.featureData.missing
+  }
+  debugUsage('usage', data);
+  next(null, JSON.stringify(data) + '\n');
 }
 
 // limit - request stream filter to limit input and fire a callback when reached.
