@@ -89,7 +89,9 @@ function doiuseStream(options) {
   
   if(options.url && options.url.trim().length > 0) {
     debug('from url', options.url)
-    styles({url: options.url}).pipe(doi);
+    styles({url: options.url})
+    .pipe(limit(1e6))
+    .pipe(doi);
   } else {
     var input = options.css || ''
     debug('from pasted code', input.length)
@@ -124,7 +126,7 @@ function pruneFeatureUsage(usageInfo, enc, next) {
   next(null, data);
 }
 
-// limit - request stream filter to limit input and fire a callback when reached.
+// limit - stream filter to limit input and fire a callback when reached.
 // onLimit(bytesSoFar, lastChunk): return a value > current limit to keep going.
 // Otherwise, error and ends the stream.
 function limit(size, onLimit) {  
