@@ -8,6 +8,7 @@ var styles = require('style-stream');
 var doiuse = require('doiuse/stream');
 var defaultBrowsers = require('doiuse').default;
 var trumpet = require('trumpet');
+var ldjson = require('ldjson-stream');
 var ecstatic = require('ecstatic');
 
 var debug = require('debug')('doiuse:server'),
@@ -39,6 +40,7 @@ var server = http.createServer(function(req, res) {
         var body = JSON.parse(data);
         doiuseStream(body, res)
           .pipe(through.obj(pruneFeatureUsage))
+          .pipe(ldjson.serialize())
           .pipe(res);
         
       } catch(e) {
@@ -48,20 +50,25 @@ var server = http.createServer(function(req, res) {
       }
     }));
   }
-  else if(/^\/(\?.*)$/.test(req.url)) {
+  else if(/^\/?((\?.*)|$)/.test(req.url)) {
     var args = qs.parse(req.url.split('?').splice(1).join('?'));
     var index = trumpet();
     
     if(args.url) {
       // prerender results.
       doiuseStream(args)
+        .pipe(through.obj(pruneFeatureUsage))
         .pipe(through.obj(renderDoiuseResult))
-        .pipe(index.select('.results').createWriteStream());
+        .pipe(index.select('#results').createWriteStream());
     }
     
+    // inline styles to avoid flash of unstyled content.
+    fs.createReadStream(__dirname + '/public/main.css')
+      .pipe(index.select('#anti-fouc').createWriteStream());
+
     fs.createReadStream(__dirname + '/public/index.html')
-    .pipe(index)
-    .pipe(res);
+      .pipe(index)
+      .pipe(res);
   }
   else {
     stat(req, res);
@@ -114,7 +121,7 @@ function pruneFeatureUsage(usageInfo, enc, next) {
     missing: usageInfo.featureData.missing
   }
   debugUsage('usage', data);
-  next(null, JSON.stringify(data) + '\n');
+  next(null, data);
 }
 
 // limit - request stream filter to limit input and fire a callback when reached.

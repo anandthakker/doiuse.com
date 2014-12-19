@@ -27,6 +27,7 @@
     "debug": "^2.1.0",
     "doiuse": "^0.2.0",
     "ecstatic": "^0.5.8",
+    "ldjson-stream": "^1.2.1",
     "mustache": "^0.8.2",
     "style-stream": "^1.1.1",
     "through2": "^0.6.3",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "brfs": "^1.2.0",
+    "browserify-css": "^0.2.0",
     "watchify": "^2.2.1"
   }
 }

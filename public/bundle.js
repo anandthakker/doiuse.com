@@ -938,9 +938,9 @@ function processCss(options, cb) {
     headers: { 'Content-Type': 'application/json' }
   },
   function(err, resp, body) {
-    if(err || !(resp.statusCode >= 200 && resp.statusCode < 400)) {
-      return cb(err, resp);
-    }
+    if(err) return cb(err);
+    else if(!(resp.statusCode >= 200 && resp.statusCode < 400))
+      return cb(new Error('There was an error, and this should be reported gracefully.')); // TODO!
     var result = (!body) ? '' : body
       .trim()
       .split('\n')

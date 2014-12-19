@@ -8,136 +8,17 @@
     <meta name="description" content="doiuse.com: Lint your CSS againt autoprefixer-like browser queries.">
     <script async="" src="//www.google-analytics.com/analytics.js"></script>
     <title>doiuse???</title>
+    <style id="anti-fouc" media="screen">
+    </style>
+    <link rel="stylesheet" href="/vendor/atebits.css" media="screen" title="spinner" charset="utf-8">
   </head>
-  <style media="screen">
-    body > * {
-      max-width: 50em;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  
-    * + * {
-      margin-top: 1em;
-    }
-    
-    body {
-      font-size: 21px;
-      font-family: monospace;
-    }
-    
-    a,
-    a:visited {
-      color: rgb(0, 100, 100);
-    }
-    
-    ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    
-    table {
-      border-collapse: collapse;
-      border-spacing: 0;
-      font-size: .875em;
-    }
-    thead {
-      display: table-header-group; /* h5bp.com/t */
-      font-weight: bold;
-    }
-
-
-    header { text-align: center; }
-    
-    
-    body > footer {
-      width: 100%;
-      border-top: 2px solid black;
-    }
-
-    .credits {
-      font-size: .875em;
-      text-align: justify;
-    }
-    .credits:after {
-      content: ' ';
-      display: inline-block;
-      width: 100%;
-      height: 1px;
-      visibility: hidden;
-    }
-    .credits li {
-      margin-top: 0;
-      display: inline-block;
-      vertical-align: top;
-    }
-    .credits ul li:not(:last-child):after {
-      content: ',';
-    }
-    
-    .results td {
-      vertical-align: top;
-    }
-    .results tr:last-child { 
-      padding-bottom: 1em;
-      border-bottom: 2px solid currentcolor;
-    }
-    .results tr:nth-child(even) {
-      background: #eee;
-    }
-    .results td:nth-child(1) {
-      width: 25%;
-    }
-    .results td:nth-child(2) {
-      width: 75%;
-      overflow-x: scroll;
-    }
-    
-
-    h1 {
-      display: inline-block;
-      text-align: left;
-    }
-    h1 input[type="text"] {
-      border: none;
-      border-bottom: 1px solid currentcolor;
-      font-size: .875em;
-      width: 21em;
-    }
-    h1 button {
-      font-size: .5em;
-      background: none;
-      border: 1px solid currentcolor;
-      border-radius: 3px;
-      font-family: inherit;
-      font-weight: bold;
-    }
-    
-    
-    label {
-      display: block;
-    }
-    
-    textarea {
-      font-size: 2em;
-      display: block;
-      width: 100%;
-    }
-    
-    input[name="url"] {
-      font-size: inherit;
-      width: 100%;
-    }
-    
-    
-  </style>
-  <body>
+  <body class="fouc">
     <!--[if lt IE 10]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <header>
       <h1>
-        Do I use $hit that breaks in...
+        Do I use <small style="position: relative; top: .02em;">$</small>hit that breaks in...
         <nobr><input type="text" name="browsers" value="" placeholder="> 1%,last 2 versions,Firefox ESR,Opera 12.1">?</nobr>
         <button disabled>&rarr; Tell me.</button>
       </h1>
@@ -149,20 +30,25 @@
         <input type="text" name="url" value="" placeholder="http://www.w3.org/standards/">
       </label>
       
-      <table>
-        <thead>
-          <tr>
-            <td>
-              Feature
-            </td>
-            <td>
-              Browsers Lacking Support
-            </td>
-          </tr>
-        </thead>
-        <tbody class="results">
-        </tbody>
-      </table>
+      <aside class="loading">
+        <div class="atebits">Loading...</div>
+      </aside>
+      <section class="results-view">
+        <table>
+          <thead>
+            <tr>
+              <td>
+                Feature
+              </td>
+              <td>
+                Browsers Lacking Support
+              </td>
+            </tr>
+          </thead>
+          <tbody id="results">
+          </tbody>
+        </table>
+      </section>
       
       <label>
         Paste HTML or CSS:
@@ -181,8 +67,8 @@
             <li><a href="https://github.com/postcss">postcss</a></li>
             <li><a href="https://github.com/substack/browserify">browserify</a></li>
           </ul>
+          <p>"Atebits" spinner by <a href="https://github.com/jlong/css-spinners">Justin Long and Julia Elman</a>.</p>
         </li>
-        
         <li><a href="https://github.com/anandthakker/doiuse.com">Site source on Github</a>.</li>
       </ul>
     </footer>
@@ -194,11 +80,19 @@
     var doiuse = require('doiuse-browser');
 
     document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('.fouc').classList.remove('fouc');
       
       var options = {};
       var button = document.querySelector('button');
-      var results = document.querySelector('.results');
+      var loading = document.querySelector('.loading');
+      var results = document.querySelector('#results');
+      var resultsView = document.querySelector('.results-view');
 
+      // initialize classes
+      if(results.children.length > 0) resultsView.classList.add('show');
+      
+      
+      // bind input element values to options object.
       doiuse.bindElement(options, ['browsers', 'url', 'css'], function(el, val, prop) {
         var url = options.url.trim().length;
         var css = options.css.trim().length
@@ -208,12 +102,28 @@
           button.setAttribute('disabled', true);
       });
       
-      button.addEventListener('click', function() {
-        doiuse.process(options, function(err, result) {
-          results.innerHTML = result;
-        });
-      });
+      // handle click & enter key in url field
+      button.addEventListener('click', fetch);
+      document.querySelector('input[name="url"]')
+        .addEventListener('keyup', function(e) { if(e.keyCode === 13) fetch(); });
 
+      function fetch() {
+        if(button.getAttribute('disabled')) return;
+
+        resultsView.classList.remove('show');
+        loading.classList.add('show');
+        doiuse.process(options, function(err, result) {
+          if(err) {
+            console.error(err);
+            // TODO: betterness.
+          }
+          else {
+            results.innerHTML = result;
+            resultsView.classList.add('show');
+            loading.classList.remove('show');
+          }
+        });
+      }
     }); // DOMContentLoaded
     
   </script>
