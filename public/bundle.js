@@ -948,7 +948,10 @@ function processCss(options, cb) {
       .map(render)
       .join('');
     
-    cb(null, result);
+    cb(null, {
+      results: result,
+      options: options
+    });
   });
 }
 

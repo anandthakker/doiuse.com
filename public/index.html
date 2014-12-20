@@ -111,21 +111,44 @@
 
       function fetch() {
         if(button.getAttribute('disabled')) return;
-
         resultsView.classList.remove('show');
         loading.classList.add('show');
-        doiuse.process(options, function(err, result) {
+        doiuse.process(options, update(options));
+      }
+      
+      function update(options, skipHistory) {
+        return function(err, response) {
           if(err) {
             console.error(err);
             // TODO: betterness.
           }
-          else {
-            results.innerHTML = result;
+          else if(options.url === response.options.url &&
+            options.browsers === response.options.browsers) {
+            results.innerHTML = response.results;
             resultsView.classList.add('show');
             loading.classList.remove('show');
+
+            document.querySelector('[name="url"]').value = options.url
+            document.querySelector('[name="css"]').value = options.css
+            document.querySelector('[name="browsers"]').value = options.browsers
+            
+            if(!skipHistory) saveState(response);
           }
-        });
+        }
       }
+      
+      function saveState(response) {
+        if((response.options.url || '').trim().length > 0) {
+          window.history.pushState(response, '', 
+          '/?url=' + response.options.url + '&browsers=' + (response.options.browsers || ''))
+        }
+      }
+      
+      window.addEventListener('popstate', function(event) {
+        options = event.state.options;
+        update(options, true)(null, event.state);
+      });
+      
     }); // DOMContentLoaded
     
   </script>
