@@ -29,6 +29,7 @@
     "ecstatic": "^0.5.8",
     "ldjson-stream": "^1.2.1",
     "mustache": "^0.8.2",
+    "normalize.css": "^3.0.2",
     "style-stream": "^1.1.1",
     "through2": "^0.6.3",
     "trumpet": "^1.7.0",
@@ -37,6 +38,8 @@
   "devDependencies": {
     "brfs": "^1.2.0",
     "browserify-css": "^0.2.0",
+    "node-sass": "^1.2.3",
+    "node-sass-cli": "0.0.3",
     "watchify": "^2.2.1"
   }
 }
