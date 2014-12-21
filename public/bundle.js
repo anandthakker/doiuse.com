@@ -1,29 +1,4 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/anand/dev/doiuse.com/lib/bind.js":[function(require,module,exports){
-
-module.exports = bind
-
-function bind(object, name, property, cb) {
-  if(typeof property === 'undefined') { property = name; }
-  if(typeof cb === 'undefined') {
-    cb = property;
-    property = name;
-  }
-  
-  if(Array.isArray(name)) {
-    name.forEach(function(name) { bind(object,name,cb); });
-  }
-  else {
-    var el = document.querySelector('[name="'+name+'"]');
-    el.addEventListener('keyup', update.bind(null, cb));
-    update();
-    function update(cb) {
-      object[property] = el.value;
-      if(typeof cb === 'function') { cb(el, el.value, property); }
-    }
-  }
-}
-
-},{}],"/Users/anand/dev/doiuse.com/lib/render.js":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/anand/dev/doiuse.com/lib/render.js":[function(require,module,exports){
 
 var mustache = require('mustache');
 
@@ -986,9 +961,9 @@ require('./public/vendor/prism.css');
 var prism = require('./public/vendor/prism.js');
 
 module.exports = {
-  bindElement: require('./lib/bind'),
   process: processCss
 }
+
 
 function processCss(options, cb) {
   xhr({
@@ -1015,4 +990,4 @@ function processCss(options, cb) {
   });
 }
 
-},{"./lib/bind":"/Users/anand/dev/doiuse.com/lib/bind.js","./lib/render":"/Users/anand/dev/doiuse.com/lib/render.js","./public/vendor/prism.css":"/Users/anand/dev/doiuse.com/public/vendor/prism.css","./public/vendor/prism.js":"/Users/anand/dev/doiuse.com/public/vendor/prism.js","xhr":"/Users/anand/dev/doiuse.com/node_modules/xhr/index.js"}]},{},[]);
+},{"./lib/render":"/Users/anand/dev/doiuse.com/lib/render.js","./public/vendor/prism.css":"/Users/anand/dev/doiuse.com/public/vendor/prism.css","./public/vendor/prism.js":"/Users/anand/dev/doiuse.com/public/vendor/prism.js","xhr":"/Users/anand/dev/doiuse.com/node_modules/xhr/index.js"}]},{},[]);

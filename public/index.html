@@ -77,37 +77,49 @@
   </body>
   
   <script src="bundle.js"></script>
+  <script id="form-data" charset="utf-8">
+    var options = {};
+  </script>
   <script charset="utf-8">
-
-    var doiuse = require('doiuse-browser');
+    var doiuse = require('doiuse-browser'),
+      $ = document.querySelector.bind(document);
 
     document.addEventListener('DOMContentLoaded', function() {
-      document.querySelector('.fouc').classList.remove('fouc');
+      $('.fouc').classList.remove('fouc');
       
-      var options = {};
-      var button = document.querySelector('button');
-      var loading = document.querySelector('.loading');
-      var results = document.querySelector('#results');
-      var resultsView = document.querySelector('.results-view');
+      // elements
+      var button = $('button');
+      var loading = $('.loading');
+      var resultsView = $('.results-view');
+      var results = $('#results');
+      var url = $('[name="url"]')
+      var browsers = $('[name="browsers"]')
+      var css = $('[name="css"]')
+      
 
       // initialize classes
       if(results.children.length > 0) resultsView.classList.add('show');
-      
-      
-      // bind input element values to options object.
-      doiuse.bindElement(options, ['browsers', 'url', 'css'], function(el, val, prop) {
-        var url = options.url.trim().length;
-        var css = options.css.trim().length
-        if(url ? !css : css) // xor
+
+      // handle click & enter key field
+      button.addEventListener('click', fetch);
+      url.addEventListener('keyup', function(e) { if(e.keyCode === 13) fetch(); });
+      browsers.addEventListener('keyup', function(e) { if(e.keyCode === 13) fetch(); });
+
+      [ url, css, browsers ].forEach(function(el) {
+        el.addEventListener('keyup', updateOptions);
+      })
+
+      function updateOptions() {
+        options.url = url.value.trim();
+        options.css = css.value.trim();
+        options.browsers = browsers.value.trim();
+        
+        // button state
+        if(options.url.length ? !options.css.length : options.css.length) // xor
           button.removeAttribute('disabled');
         else
           button.setAttribute('disabled', true);
-      });
-      
-      // handle click & enter key in url field
-      button.addEventListener('click', fetch);
-      document.querySelector('input[name="url"]')
-        .addEventListener('keyup', function(e) { if(e.keyCode === 13) fetch(); });
+      }
 
       function fetch() {
         if(button.getAttribute('disabled')) return;
@@ -117,7 +129,7 @@
       }
       
       function update(options, skipHistory) {
-        return function(err, response) {
+        return function renderResponse(err, response) {
           if(err) {
             console.error(err);
             // TODO: betterness.
@@ -128,9 +140,9 @@
             resultsView.classList.add('show');
             loading.classList.remove('show');
 
-            document.querySelector('[name="url"]').value = options.url
-            document.querySelector('[name="css"]').value = options.css
-            document.querySelector('[name="browsers"]').value = options.browsers
+            url.value = options.url
+            css.value = options.css
+            browsers.value = options.browsers
             
             if(!skipHistory) saveState(response);
           }
