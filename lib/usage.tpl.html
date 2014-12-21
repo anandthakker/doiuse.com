@@ -1,12 +1,18 @@
-<tr>
-  <td>
+<li class="feature-usage">
+  <div class="feature">
     <a href="http://caniuse.com/{{feature}}" title="caniuse.com info for {{feature}}"
         target="_blank">{{title}}</a>
-  </td>
-  <td>
-    {{missing}}
+  </div>
+  <div class="browsers">
+    <ul>
+      {{#missing}}
+      <li>{{browser}} {{versions}}</li>
+      {{/missing}}
+    </ul>
+  </div>
+  <div class="source">
     {{#source}}
     <pre><code class="language-css">{{content}}</code></pre>
     {{/source}}
-  </td>
-</tr>
+  </div>
+</li>

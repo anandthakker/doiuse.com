@@ -30,7 +30,7 @@ var mustache = require('mustache');
 
 module.exports = render;
 
-var template = "<tr>\n  <td>\n    <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n  </td>\n  <td>\n    {{missing}}\n    {{#source}}\n    <pre><code class=\"language-css\">{{content}}</code></pre>\n    {{/source}}\n  </td>\n</tr>\n";
+var template = "<li class=\"feature-usage\">\n  <div class=\"feature\">\n    <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n  </div>\n  <div class=\"browsers\">\n    <ul>\n      {{#missing}}\n      <li>{{browser}} {{versions}}</li>\n      {{/missing}}\n    </ul>\n  </div>\n  <div class=\"source\">\n    {{#source}}\n    <pre><code class=\"language-css\">{{content}}</code></pre>\n    {{/source}}\n  </div>\n</li>\n";
 function render(usage) { return mustache.render(template, usage); }
 
 },{"mustache":"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js"}],"/Users/anand/dev/doiuse.com/node_modules/browserify-css/browser.js":[function(require,module,exports){

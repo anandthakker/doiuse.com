@@ -1,3 +1,13 @@
+
+/* Paul Irish: apply a natural box layout model to all elements, but allowing components to change */
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+
 $font-size-base: 21px;
 html {
   font-family: monospace;
@@ -80,7 +90,7 @@ footer > * {
   vertical-align: top;
 }
 
-.credits p,
+.credits p { margin: 0; }
 .credits li { display: inline-block; margin: 0; }
 .credits li:not(:last-child):after { content: ','; }
 .credits li:last-child:after { content: '.'; }
@@ -89,33 +99,52 @@ footer > * {
   display: none;
   font-size: .5em;
   @media (min-width: 500px) { font-size: .875em; }
-}
-.results-view.show { display: block; }
-.results-view td {
-  vertical-align: top;
-}
-.results-view tr:last-child { 
-  padding-bottom: 1em;
-  border-bottom: 2px solid currentcolor;
-}
-.results-view tr:nth-child(even) {
-  background: #eee;
-}
-
-@mixin column-widths($widths...) {
-  @for $i from 1 through length($widths) {
     
+  .feature-usage:last-child { 
+    padding-bottom: 1em;
+    border-bottom: 2px solid currentcolor;
   }
-}
-.results-view {
-  td:nth-child(1) { width: 50%; }
-  td:nth-child(2) { width: 50%; }
+  .feature-usage:nth-child(even) {
+    background: #eee;
+  }
+
+  header {
+    text-align: left;
+    font-weight: bold;
+  }
+  div {
+    display: inline-block;
+    vertical-align: top;
+    overflow-x: scroll;
+    margin: 0;
+  }
+  
+  .feature { padding: 3px 0 0 5px; }
+  .browsers {
+    padding: 3px 0 0 5px; 
+    li { margin: 0; }
+  }
+  .source {
+    pre {
+      background: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
+  
+  .feature { width: 48%; }
+  .browsers { width: 49%; }
+  .source { width: 100%; margin: 3px 0 5px 5px; }
+  header .source { display: none; }
   @media (min-width: 900px) {
-    td:nth-child(1) { width: 25%; }
-    td:nth-child(2) { width: 75%; }
+    .feature { width: 32%; }
+    .browsers { width: 32%; }
+    .source { width: 32%; }
+    header .source { display: inline-block; }
   }
 }
 
+.results-view.show { display: block; }
 
 
 h1 {

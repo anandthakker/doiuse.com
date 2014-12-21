@@ -1,3 +1,10 @@
+/* Paul Irish: apply a natural box layout model to all elements, but allowing components to change */
+html {
+  box-sizing: border-box; }
+
+*, *:before, *:after {
+  box-sizing: inherit; }
+
 html {
   font-family: monospace;
   font-size: 21px;
@@ -73,7 +80,10 @@ footer > * {
   display: inline-block;
   vertical-align: top; }
 
-.credits p, .credits li {
+.credits p {
+  margin: 0; }
+
+.credits li {
   display: inline-block;
   margin: 0; }
 
@@ -89,31 +99,54 @@ footer > * {
   @media (min-width: 500px) {
     .results-view {
       font-size: 0.875em; } }
+  .results-view .feature-usage:last-child {
+    padding-bottom: 1em;
+    border-bottom: 2px solid currentcolor; }
+  .results-view .feature-usage:nth-child(even) {
+    background: #eee; }
+  .results-view header {
+    text-align: left;
+    font-weight: bold; }
+  .results-view div {
+    display: inline-block;
+    vertical-align: top;
+    overflow-x: scroll;
+    margin: 0; }
+  .results-view .feature {
+    padding: 3px 0 0 5px; }
+  .results-view .browsers {
+    padding: 3px 0 0 5px; }
+    .results-view .browsers li {
+      margin: 0; }
+  .results-view .source pre {
+    background: none;
+    margin: 0;
+    padding: 0; }
+  .results-view .feature {
+    width: 48%; }
+  .results-view .browsers {
+    width: 49%; }
+  .results-view .source {
+    width: 100%;
+    margin: 3px 0 5px 5px; }
+  .results-view header .source {
+    display: none; }
+  @media (min-width: 900px) {
+    .results-view .feature {
+      width: 32%; }
+
+    .results-view .browsers {
+      width: 32%; }
+
+    .results-view .source {
+      width: 32%; }
+
+    .results-view header .source {
+      display: inline-block; }
+ }
 
 .results-view.show {
   display: block; }
-
-.results-view td {
-  vertical-align: top; }
-
-.results-view tr:last-child {
-  padding-bottom: 1em;
-  border-bottom: 2px solid currentcolor; }
-
-.results-view tr:nth-child(even) {
-  background: #eee; }
-
-.results-view td:nth-child(1) {
-  width: 50%; }
-.results-view td:nth-child(2) {
-  width: 50%; }
-@media (min-width: 900px) {
-  .results-view td:nth-child(1) {
-    width: 25%; }
-
-  .results-view td:nth-child(2) {
-    width: 75%; }
- }
 
 h1 {
   text-align: left; }
