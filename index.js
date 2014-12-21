@@ -44,9 +44,9 @@ var server = http.createServer(function(req, res) {
           .pipe(res);
         
       } catch(e) {
-        console.error(e);
+        console.error('Error processing POST',data,e);
         res.statusCode = 500;
-        res.end('Error');
+        res.end();
       }
     }));
   }

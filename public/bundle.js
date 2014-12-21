@@ -961,7 +961,8 @@ require('./public/vendor/prism.css');
 var prism = require('./public/vendor/prism.js');
 
 module.exports = {
-  process: processCss
+  process: processCss,
+  prism: prism
 }
 
 

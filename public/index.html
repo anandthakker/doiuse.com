@@ -100,19 +100,22 @@
       // initialize classes
       if(results.children.length > 0) resultsView.classList.add('show');
 
+      [ url, css, browsers ].forEach(function(el) {
+        el.addEventListener('keyup', updateOptions);
+        el.addEventListener('blur', updateOptions);
+      })
+      
       // handle click & enter key field
       button.addEventListener('click', fetch);
       url.addEventListener('keyup', function(e) { if(e.keyCode === 13) fetch(); });
       browsers.addEventListener('keyup', function(e) { if(e.keyCode === 13) fetch(); });
 
-      [ url, css, browsers ].forEach(function(el) {
-        el.addEventListener('keyup', updateOptions);
-      })
 
       function updateOptions() {
         options.url = url.value.trim();
         options.css = css.value.trim();
         options.browsers = browsers.value.trim();
+        console.log(options);
         
         // button state
         if(options.url.length ? !options.css.length : options.css.length) // xor
@@ -139,6 +142,7 @@
             results.innerHTML = response.results;
             resultsView.classList.add('show');
             loading.classList.remove('show');
+            doiuse.prism.highlightAll();
 
             url.value = options.url
             css.value = options.css
