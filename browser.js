@@ -1,6 +1,9 @@
 var xhr = require('xhr');
 var render = require('./lib/render');
 
+require('./public/vendor/prism.css');
+var prism = require('./public/vendor/prism.js');
+
 module.exports = {
   bindElement: require('./lib/bind'),
   process: processCss

@@ -19,8 +19,14 @@
   "browser": "./browser.js",
   "browserify": {
     "transform": [
+      "browserify-css",
       "brfs"
     ]
+  },
+  "browserify-css": {
+    "autoInject": true,
+    "minify": true,
+    "rootDir": "."
   },
   "dependencies": {
     "concat-stream": "^1.4.7",

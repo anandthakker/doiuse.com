@@ -4,22 +4,22 @@ var http = require('http');
 var qs = require('querystring');
 var concat = require('concat-stream');
 var through = require('through2');
-var styles = require('style-stream');
-var doiuse = require('doiuse/stream');
-var defaultBrowsers = require('doiuse').default;
 var trumpet = require('trumpet');
 var ldjson = require('ldjson-stream');
 var ecstatic = require('ecstatic');
 
-var debug = require('debug')('doiuse:server'),
-    debugUsage = require('debug')('doiuse:server:usage');
-
-
-var render = require('./lib/render');
+var debug = require('debug')('doiuse:server');
 var logmem = require('./lib/logmem');
 
-var stat = ecstatic({root: __dirname + '/public',gzip: true});
+var prune = require('./lib/prune'),
+    unique = require('./lib/unique'),
+    limit = require('./lib/limit'),
+    cssFeatures = require('./lib/css-features'),
+    render = require('./lib/render');
 
+
+
+var stat = ecstatic({root: __dirname + '/public',gzip: true});
 
 var server = http.createServer(function(req, res) {
   logmem();
@@ -37,9 +37,9 @@ var server = http.createServer(function(req, res) {
     .pipe(limit(1e6, function(){request.connection.destroy()}))
     .pipe(concat(function(data) {
       try {
-        var body = JSON.parse(data);
-        doiuseStream(body, res)
-          .pipe(through.obj(pruneFeatureUsage))
+        cssFeatures(JSON.parse(data))
+          .pipe(unique())
+          .pipe(prune())
           .pipe(ldjson.serialize())
           .pipe(res);
         
@@ -56,9 +56,11 @@ var server = http.createServer(function(req, res) {
     
     if(args.url) {
       // prerender results.
-      doiuseStream(args)
-        .pipe(through.obj(pruneFeatureUsage))
-        .pipe(through.obj(renderDoiuseResult))
+      cssFeatures(args)
+        .pipe(unique())
+        .pipe(prune())
+        .pipe(through.obj(function (usageInfo, enc, next) {
+          next(null, render(usageInfo));}))
         .pipe(index.select('#results').createWriteStream());
     }
     
@@ -79,63 +81,3 @@ var port = process.env.PORT || Number(process.argv[2]) || 3000;
 server.listen(port, function() {
   console.log('doiuse:', 'listening on ',port);
 });
-
-
-function doiuseStream(options) {
-  if(!options.browsers || (options.browsers.trim().length === 0))
-    options.browsers = defaultBrowsers;
-
-  var doi = doiuse(options.browsers, {json: true})
-  
-  if(options.url && options.url.trim().length > 0) {
-    debug('from url', options.url)
-    styles({url: options.url})
-    .pipe(limit(1e6))
-    .pipe(doi);
-  } else {
-    var input = options.css || ''
-    debug('from pasted code', input.length)
-    // hacky html vs css test
-    if(/^[\s]*</.test(input)) {
-      console.log('HTML input');
-      var style = styles({basepath: '/dev/null'});
-      style.pipe(doi);
-      style.end(input);
-    }
-    else doi.end(input)
-  }
-  
-  return doi;
-}
-
-
-function renderDoiuseResult(usageInfo, enc, next) {
-  next(null, render(usageInfo));
-}
-
-function pruneFeatureUsage(usageInfo, enc, next) {
-  usageInfo.featureData = usageInfo.featureData || {}
-  var data = {
-    message: usageInfo.message,
-    error: usageInfo.error,
-    feature: usageInfo.feature,
-    title: usageInfo.featureData.title,
-    missing: usageInfo.featureData.missing
-  }
-  debugUsage('usage', data);
-  next(null, data);
-}
-
-// limit - stream filter to limit input and fire a callback when reached.
-// onLimit(bytesSoFar, lastChunk): return a value > current limit to keep going.
-// Otherwise, error and ends the stream.
-function limit(size, onLimit) {  
-  var soFar = 0;
-  return through(function(chunk, enc, next) {
-    soFar += chunk.length;
-    if(soFar > size && !(size = onLimit(soFar, chunk)))
-      next(new Error('Limit reached.'));
-    else
-      next(null, chunk);
-  });
-}

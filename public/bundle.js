@@ -30,10 +30,60 @@ var mustache = require('mustache');
 
 module.exports = render;
 
-var template = "<tr>\n  <td>\n    <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n  </td>\n  <td>\n    {{missing}}\n  </td>\n</tr>\n";
+var template = "<tr>\n  <td>\n    <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n  </td>\n  <td>\n    {{missing}}\n    {{#source}}\n    <pre><code class=\"language-css\">{{content}}</code></pre>\n    {{/source}}\n  </td>\n</tr>\n";
 function render(usage) { return mustache.render(template, usage); }
 
-},{"mustache":"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js"}],"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js":[function(require,module,exports){
+},{"mustache":"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js"}],"/Users/anand/dev/doiuse.com/node_modules/browserify-css/browser.js":[function(require,module,exports){
+//
+// For more information about browser field, check out the browser field at https://github.com/substack/browserify-handbook#browser-field.
+//
+
+module.exports = {
+    // Create a <link> tag with optional data attributes
+    createLink: function(href, attributes) {
+        var head = document.head || document.getElementsByTagName('head')[0];
+        var link = document.createElement('link');
+
+        link.href = href;
+        link.rel = 'stylesheet';
+
+        for (var key in attributes) {
+            if ( ! attributes.hasOwnProperty(key)) {
+                continue;
+            }
+            var value = attributes[key];
+            link.setAttribute('data-' + key, value);
+        }
+
+        head.appendChild(link);
+    },
+    // Create a <style> tag with optional data attributes
+    createStyle: function(cssText, attributes) {
+        var head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style');
+
+        style.type = 'text/css';
+        for (var key in attributes) {
+            if ( ! attributes.hasOwnProperty(key)) {
+                continue;
+            }
+            var value = attributes[key];
+            style.setAttribute('data-' + key, value);
+        }
+
+        if (style.sheet) {
+            style.sheet.cssText = cssText;
+        } else if (style.styleSheet) {
+            style.styleSheet.cssText = cssText;
+        } else {
+            style.appendChild(document.createTextNode(cssText));
+        }
+
+        head.appendChild(style);
+    }
+};
+
+},{}],"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js":[function(require,module,exports){
 /*!
  * mustache.js - Logic-less {{mustache}} templates with JavaScript
  * http://github.com/janl/mustache.js
@@ -921,9 +971,19 @@ module.exports = function (headers) {
 
   return result
 }
-},{"for-each":"/Users/anand/dev/doiuse.com/node_modules/xhr/node_modules/parse-headers/node_modules/for-each/index.js","trim":"/Users/anand/dev/doiuse.com/node_modules/xhr/node_modules/parse-headers/node_modules/trim/index.js"}],"doiuse-browser":[function(require,module,exports){
+},{"for-each":"/Users/anand/dev/doiuse.com/node_modules/xhr/node_modules/parse-headers/node_modules/for-each/index.js","trim":"/Users/anand/dev/doiuse.com/node_modules/xhr/node_modules/parse-headers/node_modules/trim/index.js"}],"/Users/anand/dev/doiuse.com/public/vendor/prism.css":[function(require,module,exports){
+var css = "code[class*=language-],pre[class*=language-]{color:#000;text-shadow:0 1px #fff;font-family:Consolas,Monaco,'Andale Mono',monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}code[class*=language-] ::-moz-selection,code[class*=language-]::-moz-selection,pre[class*=language-] ::-moz-selection,pre[class*=language-]::-moz-selection{text-shadow:none;background:#b3d4fc}code[class*=language-] ::selection,code[class*=language-]::selection,pre[class*=language-] ::selection,pre[class*=language-]::selection{text-shadow:none;background:#b3d4fc}@media print{code[class*=language-],pre[class*=language-]{text-shadow:none}}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#f5f2f0}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em}.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#708090}.token.punctuation{color:#999}.namespace{opacity:.7}.token.boolean,.token.constant,.token.deleted,.token.number,.token.property,.token.symbol,.token.tag{color:#905}.token.attr-name,.token.builtin,.token.char,.token.inserted,.token.selector,.token.string{color:#690}.language-css .token.string,.style .token.string,.token.entity,.token.operator,.token.url{color:#a67f59;background:hsla(0,0%,100%,.5)}.token.atrule,.token.attr-value,.token.keyword{color:#07a}.token.function{color:#DD4A68}.token.important,.token.regex,.token.variable{color:#e90}.token.important{font-weight:700}.token.entity{cursor:help}"; (require("/Users/anand/dev/doiuse.com/node_modules/browserify-css").createStyle(css, { "href": "public/vendor/prism.css"})); module.exports = css;
+},{"/Users/anand/dev/doiuse.com/node_modules/browserify-css":"/Users/anand/dev/doiuse.com/node_modules/browserify-css/browser.js"}],"/Users/anand/dev/doiuse.com/public/vendor/prism.js":[function(require,module,exports){
+/* http://prismjs.com/download.html?themes=prism&languages=css */
+self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{};var Prism=function(){var e=/\blang(?:uage)?-(?!\*)(\w+)\b/i,t=self.Prism={util:{encode:function(e){return e instanceof n?new n(e.type,t.util.encode(e.content),e.alias):"Array"===t.util.type(e)?e.map(t.util.encode):e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},clone:function(e){var n=t.util.type(e);switch(n){case"Object":var a={};for(var r in e)e.hasOwnProperty(r)&&(a[r]=t.util.clone(e[r]));return a;case"Array":return e.slice()}return e}},languages:{extend:function(e,n){var a=t.util.clone(t.languages[e]);for(var r in n)a[r]=n[r];return a},insertBefore:function(e,n,a,r){r=r||t.languages;var i=r[e];if(2==arguments.length){a=arguments[1];for(var l in a)a.hasOwnProperty(l)&&(i[l]=a[l]);return i}var s={};for(var o in i)if(i.hasOwnProperty(o)){if(o==n)for(var l in a)a.hasOwnProperty(l)&&(s[l]=a[l]);s[o]=i[o]}return t.languages.DFS(t.languages,function(t,n){n===r[e]&&t!=e&&(this[t]=s)}),r[e]=s},DFS:function(e,n,a){for(var r in e)e.hasOwnProperty(r)&&(n.call(e,r,e[r],a||r),"Object"===t.util.type(e[r])?t.languages.DFS(e[r],n):"Array"===t.util.type(e[r])&&t.languages.DFS(e[r],n,r))}},highlightAll:function(e,n){for(var a,r=document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'),i=0;a=r[i++];)t.highlightElement(a,e===!0,n)},highlightElement:function(a,r,i){for(var l,s,o=a;o&&!e.test(o.className);)o=o.parentNode;if(o&&(l=(o.className.match(e)||[,""])[1],s=t.languages[l]),s){a.className=a.className.replace(e,"").replace(/\s+/g," ")+" language-"+l,o=a.parentNode,/pre/i.test(o.nodeName)&&(o.className=o.className.replace(e,"").replace(/\s+/g," ")+" language-"+l);var g=a.textContent;if(g){var u={element:a,language:l,grammar:s,code:g};if(t.hooks.run("before-highlight",u),r&&self.Worker){var c=new Worker(t.filename);c.onmessage=function(e){u.highlightedCode=n.stringify(JSON.parse(e.data),l),t.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,i&&i.call(u.element),t.hooks.run("after-highlight",u)},c.postMessage(JSON.stringify({language:u.language,code:u.code}))}else u.highlightedCode=t.highlight(u.code,u.grammar,u.language),t.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,i&&i.call(a),t.hooks.run("after-highlight",u)}}},highlight:function(e,a,r){var i=t.tokenize(e,a);return n.stringify(t.util.encode(i),r)},tokenize:function(e,n){var a=t.Token,r=[e],i=n.rest;if(i){for(var l in i)n[l]=i[l];delete n.rest}e:for(var l in n)if(n.hasOwnProperty(l)&&n[l]){var s=n[l];s="Array"===t.util.type(s)?s:[s];for(var o=0;o<s.length;++o){var g=s[o],u=g.inside,c=!!g.lookbehind,f=0,h=g.alias;g=g.pattern||g;for(var p=0;p<r.length;p++){var d=r[p];if(r.length>e.length)break e;if(!(d instanceof a)){g.lastIndex=0;var m=g.exec(d);if(m){c&&(f=m[1].length);var y=m.index-1+f,m=m[0].slice(f),v=m.length,k=y+v,b=d.slice(0,y+1),w=d.slice(k+1),O=[p,1];b&&O.push(b);var N=new a(l,u?t.tokenize(m,u):m,h);O.push(N),w&&O.push(w),Array.prototype.splice.apply(r,O)}}}}}return r},hooks:{all:{},add:function(e,n){var a=t.hooks.all;a[e]=a[e]||[],a[e].push(n)},run:function(e,n){var a=t.hooks.all[e];if(a&&a.length)for(var r,i=0;r=a[i++];)r(n)}}},n=t.Token=function(e,t,n){this.type=e,this.content=t,this.alias=n};if(n.stringify=function(e,a,r){if("string"==typeof e)return e;if("[object Array]"==Object.prototype.toString.call(e))return e.map(function(t){return n.stringify(t,a,e)}).join("");var i={type:e.type,content:n.stringify(e.content,a,r),tag:"span",classes:["token",e.type],attributes:{},language:a,parent:r};if("comment"==i.type&&(i.attributes.spellcheck="true"),e.alias){var l="Array"===t.util.type(e.alias)?e.alias:[e.alias];Array.prototype.push.apply(i.classes,l)}t.hooks.run("wrap",i);var s="";for(var o in i.attributes)s+=o+'="'+(i.attributes[o]||"")+'"';return"<"+i.tag+' class="'+i.classes.join(" ")+'" '+s+">"+i.content+"</"+i.tag+">"},!self.document)return self.addEventListener?(self.addEventListener("message",function(e){var n=JSON.parse(e.data),a=n.language,r=n.code;self.postMessage(JSON.stringify(t.util.encode(t.tokenize(r,t.languages[a])))),self.close()},!1),self.Prism):self.Prism;var a=document.getElementsByTagName("script");return a=a[a.length-1],a&&(t.filename=a.src,document.addEventListener&&!a.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",t.highlightAll)),self.Prism}();"undefined"!=typeof module&&module.exports&&(module.exports=Prism);;
+Prism.languages.css={comment:/\/\*[\w\W]*?\*\//g,atrule:{pattern:/@[\w-]+?.*?(;|(?=\s*{))/gi,inside:{punctuation:/[;:]/g}},url:/url\((["']?).*?\1\)/gi,selector:/[^\{\}\s][^\{\};]*(?=\s*\{)/g,property:/(\b|\B)[\w-]+(?=\s*:)/gi,string:/("|')(\\?.)*?\1/g,important:/\B!important\b/gi,punctuation:/[\{\};:]/g,"function":/[-a-z0-9]+(?=\()/gi},Prism.languages.markup&&(Prism.languages.insertBefore("markup","tag",{style:{pattern:/<style[\w\W]*?>[\w\W]*?<\/style>/gi,inside:{tag:{pattern:/<style[\w\W]*?>|<\/style>/gi,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.css},alias:"language-css"}}),Prism.languages.insertBefore("inside","attr-value",{"style-attr":{pattern:/\s*style=("|').+?\1/gi,inside:{"attr-name":{pattern:/^\s*style/gi,inside:Prism.languages.markup.tag.inside},punctuation:/^\s*=\s*['"]|['"]\s*$/,"attr-value":{pattern:/.+/gi,inside:Prism.languages.css}},alias:"language-css"}},Prism.languages.markup.tag));;
+
+},{}],"doiuse-browser":[function(require,module,exports){
 var xhr = require('xhr');
 var render = require('./lib/render');
+
+require('./public/vendor/prism.css');
+var prism = require('./public/vendor/prism.js');
 
 module.exports = {
   bindElement: require('./lib/bind'),
@@ -955,4 +1015,4 @@ function processCss(options, cb) {
   });
 }
 
-},{"./lib/bind":"/Users/anand/dev/doiuse.com/lib/bind.js","./lib/render":"/Users/anand/dev/doiuse.com/lib/render.js","xhr":"/Users/anand/dev/doiuse.com/node_modules/xhr/index.js"}]},{},[]);
+},{"./lib/bind":"/Users/anand/dev/doiuse.com/lib/bind.js","./lib/render":"/Users/anand/dev/doiuse.com/lib/render.js","./public/vendor/prism.css":"/Users/anand/dev/doiuse.com/public/vendor/prism.css","./public/vendor/prism.js":"/Users/anand/dev/doiuse.com/public/vendor/prism.js","xhr":"/Users/anand/dev/doiuse.com/node_modules/xhr/index.js"}]},{},[]);
