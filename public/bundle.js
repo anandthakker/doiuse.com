@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
         body = JSON.parse(body);
       }
       catch(e) { err = e; }
-      update(err, body);
+      update(err, body || resp);
     });
   }
     
@@ -99,23 +99,11 @@ document.addEventListener('DOMContentLoaded', function() {
   function update(err, response, skipHistory) {
     loading.classList.remove('show');
     
-    // populate input fields with the args that were used for this query.
-    for(k in response.args)
-      if(input[k]) input[k].value = response.args[k];
-      
-    var query = qs.stringify(response.args);
-    if (!skipHistory && query.length > 0 && query.length < 1e6) {
-      window.history.pushState(response, '', '/?' + query);
-      $('#json-link').setAttribute('href', '/api?' + query);
-    }
-      
     if (err) {
       error.classList.add('show')
       errorMessage.innerHTML = err.toString();
-      return;
     }
-    
-    if(response.usages && response.usages.length > 0) {
+    else if(response.usages && response.usages.length > 0) {
       
       results.innerHTML = response.usages
         .map(function(usage) {
@@ -126,6 +114,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
       resultsView.classList.add('show');
       prism.highlightAll();
+    }
+    
+    if(response) {
+      // populate input fields with the args that were used for this query.
+      for(k in response.args)
+        if(input[k]) input[k].value = response.args[k];
+        
+      var query = qs.stringify(response.args);
+      if (!skipHistory && query.length > 0 && query.length < 1e6) {
+        window.history.pushState(response, '', '/?' + query);
+        $('#json-link').setAttribute('href', '/api?' + query);
+      }
     }
   }
 
