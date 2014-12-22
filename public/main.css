@@ -8,15 +8,18 @@ html {
 html {
   color: #222;
   font-family: monospace;
-  font-size: 21px;
+  font-size: 18px;
   line-height: 1.3; }
+  @media (min-width: 500px) {
+    html {
+      font-size: 21px; } }
 
 /* container */
 body > * {
   max-width: calc(100% - .25em);
   margin-left: auto;
   margin-right: auto; }
-  @media (min-width: 1050px) {
+  @media (min-width: 900px) {
     body > * {
       max-width: 50rem; } }
 
@@ -27,12 +30,6 @@ body > * {
 *:focus {
   outline: 1px solid #0078b4;
   outline-offset: 1px; }
-
-/* adjust the default (normalize.css) type scale at smaller sizes */
-@media (max-width: 900px) {
-  h1 {
-    font-size: 1.25em; }
- }
 
 a, a:visited {
   color: #0078b4; }
@@ -59,6 +56,9 @@ h1 {
   text-align: left;
   font-weight: normal;
   line-height: 1; }
+  @media (max-width: 900px) {
+    h1 {
+      font-size: 1.25em; } }
   h1 [name="browsers"] {
     max-width: calc(100% - 1em);
     width: 21em;
@@ -74,30 +74,37 @@ h1 {
       border-bottom: 1px solid #0078b4; }
 
 header button {
+  font-size: 0.875em;
   float: right;
   border-radius: 5em;
-  height: 4em;
-  width: 6em;
+  height: 4.57143em;
+  /* 2 lines */
+  width: 4.57143em;
   font-family: inherit;
-  color: rgba(250, 160, 0, 0.1);
-  border: 1px solid rgba(250, 160, 0, 0.05);
-  background-color: rgba(250, 160, 0, 0.05); }
+  color: rgba(255, 120, 0, 0.1);
+  border: 1px solid rgba(255, 120, 0, 0.05);
+  background-color: rgba(255, 120, 0, 0.05); }
+  @media (max-width: 899px) {
+    header button {
+      font-size: 0.54688em;
+      margin-right: 1.5em; } }
   header button:not([disabled]) {
-    color: #faa000;
-    border: 1px solid rgba(250, 160, 0, 0.9);
-    background-color: rgba(250, 160, 0, 0.2); }
+    color: #ff7800;
+    border: 1px solid #ff7800; }
     header button:not([disabled]):hover {
-      background-color: rgba(250, 160, 0, 0.3); }
+      background-color: rgba(255, 120, 0, 0.2); }
 
 /* url & css inputs */
 label {
   display: block; }
 
 textarea {
-  font-size: 1.5em;
   display: block;
   width: 100%;
   border-color: #eee; }
+  @media (min-width: 500px) {
+    textarea {
+      font-size: 1.5em; } }
 
 input[name="url"] {
   font-size: inherit;
@@ -105,7 +112,7 @@ input[name="url"] {
 
 .results-view {
   display: none;
-  font-size: 0.5em; }
+  font-size: 0.625em; }
   @media (min-width: 500px) {
     .results-view {
       font-size: 0.875em; } }
@@ -113,7 +120,10 @@ input[name="url"] {
     text-align: left;
     font-weight: bold; }
   .results-view header, .results-view .feature-usage {
-    padding: 0.25em 0.125em 0.125em 0.25em; }
+    padding: 0.5em 0.125em 0.625em 0.5em; }
+    @media (min-width: 500px) {
+      .results-view header, .results-view .feature-usage {
+        padding: 0.25em 0.125em 0.125em 0.25em; } }
   .results-view .feature-usage {
     margin-top: 0; }
   .results-view .feature-usage:last-child {
@@ -151,6 +161,10 @@ input[name="url"] {
     width: 49%; }
   .results-view .source {
     width: 100%; }
+    .results-view .source:before {
+      content: 'E.g.:';
+      display: block;
+      font-weight: bold; }
   .results-view header .source {
     display: none; }
   @media (min-width: 900px) {
@@ -162,6 +176,8 @@ input[name="url"] {
 
     .results-view .source {
       width: 32%; }
+      .results-view .source:before {
+        display: none; }
 
     .results-view header .source {
       display: inline-block; }
@@ -171,7 +187,15 @@ input[name="url"] {
   display: block; }
 
 .error {
-  display: none; }
+  display: none;
+  max-width: 30rem;
+  margin: 1em auto;
+  font-size: 0.875em;
+  padding-left: 1em;
+  border-left: 1px solid #c80028;
+  color: #c80028; }
+  .error #errorMessage {
+    background-color: rgba(200, 0, 40, 0.05); }
 
 .error.show {
   display: block; }

@@ -1,7 +1,9 @@
 
-$font-size-base: 21px;
+$font-size-base: 18px;
+$font-size-base-md: 21px;
 $bluegreen: rgb(0, 120, 180);
-$lightbluegreen: rgb(250, 160, 0);
+$orange: rgb(255, 120, 0);
+$red: rgb(200,0,40);
 $black: #222;
 $lightgray: #eee;
 
@@ -17,13 +19,14 @@ html {
   color: $black;
   font-family: monospace;
   font-size: $font-size-base;
+  @media (min-width: 500px) { font-size: $font-size-base-md; }
   line-height: 1.3;
 }
 
 /* container */
 body > * {
   max-width: calc(100% - .25em);
-  @media (min-width: ($font-size-base * 50)) { max-width: 50rem; }
+  @media (min-width: 900px) { max-width: 50rem; }
   margin-left: auto;
   margin-right: auto;
 }
@@ -36,11 +39,6 @@ body > * {
 *:focus {
   outline: 1px solid $bluegreen;
   outline-offset: 1px;
-}
-
-/* adjust the default (normalize.css) type scale at smaller sizes */
-@media (max-width: 900px) {
-  h1 { font-size: 1.25em; }
 }
 
 a,
@@ -72,6 +70,10 @@ h1 {
   font-weight: normal;
   line-height: 1;
   
+  @media (max-width: 900px) {
+    font-size: 1.25em;
+  }
+  
   [name="browsers"] {
     max-width: calc(100% - 1em);
     width: 21em;
@@ -88,19 +90,25 @@ h1 {
 }
 
 header button {
+  font-size: .875em;
   float: right;
   border-radius: 5em;
-  height: 4em;
-  width: 6em;
+  height: (4em/.875); /* 2 lines */
+  width: (4em/.875);
+  
+  @media (max-width: 899px) {
+    font-size: (.875em * 0.625);
+    margin-right: 1.5em;
+  }
+
   font-family: inherit;
-  color: rgba($lightbluegreen, .1);
-  border: 1px solid rgba($lightbluegreen, .05);
-  background-color: rgba($lightbluegreen, .05);
+  color: rgba($orange, .1);
+  border: 1px solid rgba($orange, .05);
+  background-color: rgba($orange, .05);
   &:not([disabled]) {
-    color: rgba($lightbluegreen, 1);
-    border: 1px solid rgba($lightbluegreen, .9);
-    background-color: rgba($lightbluegreen, .2);
-    &:hover { background-color: rgba($lightbluegreen, .3); }
+    color: rgba($orange, 1);
+    border: 1px solid rgba($orange, 1);
+    &:hover { background-color: rgba($orange, .2); }
   }
 }
 
@@ -111,7 +119,7 @@ label {
 }
 
 textarea {
-  font-size: 1.5em;
+  @media (min-width: 500px) { font-size: 1.5em; }
   display: block;
   width: 100%;
   border-color: $lightgray;
@@ -126,7 +134,7 @@ input[name="url"] {
 
 .results-view { 
   display: none;
-  font-size: .5em;
+  font-size: .625em;
   @media (min-width: 500px) { font-size: .875em; }
   
   header {
@@ -136,7 +144,8 @@ input[name="url"] {
 
   header,
   .feature-usage {
-    padding: .25em .125em .125em .25em;
+    padding: .5em .125em .625em .5em;
+    @media (min-width: 500px) { padding: .25em .125em .125em .25em; }
   }
   .feature-usage { margin-top: 0; }
   .feature-usage:last-child { 
@@ -187,12 +196,22 @@ input[name="url"] {
   
   .feature { width: 48%; }
   .browsers { width: 49%; }
-  .source { width: 100%; }
+  .source { 
+    width: 100%;
+    &:before {
+      content: 'E.g.:';
+      display: block;
+      font-weight: bold;
+    }
+  }
   header .source { display: none; }
   @media (min-width: 900px) {
     .feature { width: 32%; }
     .browsers { width: 32%; }
-    .source { width: 32%; }
+    .source {
+      width: 32%;
+      &:before { display: none; }
+    }
     header .source { display: inline-block; }
   }
 }
@@ -200,7 +219,19 @@ input[name="url"] {
 .results-view.show { display: block; }
 
 
-.error { display: none; }
+.error {
+  display: none;
+  max-width: 30rem;
+  margin: 1em auto;
+  font-size: .875em;
+  padding-left: 1em;
+  border-left: 1px solid $red;
+  color: $red;
+
+  #errorMessage {
+    background-color: rgba($red, .05);
+  }
+}
 .error.show { display: block; }
 .error.show:after { content: 'Also, you should tell Anand to style his error messages.'}
 

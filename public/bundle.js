@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (button.getAttribute('disabled')) return;
 
     resultsView.classList.remove('show');
+    error.classList.remove('show');
     loading.classList.add('show');
     
     if(!args) {
@@ -96,6 +97,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
   function update(err, response, skipHistory) {
+    loading.classList.remove('show');
+    
+    // populate input fields with the args that were used for this query.
+    for(k in response.args)
+      if(input[k]) input[k].value = response.args[k];
+      
+    var query = qs.stringify(response.args);
+    if (!skipHistory && query.length > 0 && query.length < 1e6) {
+      window.history.pushState(response, '', '/?' + query);
+      $('#json-link').setAttribute('href', '/api?' + query);
+    }
+      
     if (err) {
       error.classList.add('show')
       errorMessage.innerHTML = err.toString();
@@ -112,18 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .join('');
         
       resultsView.classList.add('show');
-      loading.classList.remove('show');
       prism.highlightAll();
-    }
-    
-    // populate input fields with the args that were used for this query.
-    for(k in response.args)
-      if(input[k]) input[k].value = response.args[k];
-
-    var query = qs.stringify(response.args);
-    if (!skipHistory && query.length < 1e6) {
-      window.history.pushState(response, '', '/?' + query);
-      $('#json-link').setAttribute('href', '/api?' + query);
     }
   }
 
