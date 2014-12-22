@@ -8,19 +8,20 @@
     <meta name="description" content="doiuse.com: Lint your CSS againt autoprefixer-like browser queries.">
     <script async="" src="//www.google-analytics.com/analytics.js"></script>
     <title>doiuse...?</title>
+    <link rel="stylesheet" href="/vendor/normalize.css" media="screen" charset="utf-8">
     <style id="anti-fouc">
     </style>
-    <link rel="stylesheet" href="/vendor/atebits.css" media="screen" title="spinner" charset="utf-8">
+    <link rel="stylesheet" href="/vendor/atebits.css" media="screen" charset="utf-8">
   </head>
   <body class="fouc">
     <!--[if lt IE 10]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     <header>
+      <button disabled>Tell me.</button>
       <h1>
-        Do I use <small style="position: relative; top: .02em;">$</small>hit that breaks in...
+        Do I use CSS that breaks in...
         <nobr><input type="text" name="browsers" value="" placeholder="> 1%,last 2 versions,Firefox ESR,Opera 12.1">?</nobr>
-        <button disabled>&rarr; Tell me.</button>
       </h1>
     </header>
     
@@ -61,7 +62,7 @@
       
       <label>
         Paste HTML or CSS:
-        <textarea name="css" rows="15" cols="40"></textarea>
+        <textarea name="css" rows="10" cols="40"></textarea>
       </label>
     </section>
     

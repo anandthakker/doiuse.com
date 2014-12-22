@@ -52,7 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   var args = qs.parse(url.parse(window.location.href).query);
-  if(args.url || args.css) fetch(args);
+  if(args.url || args.css) {
+    button.removeAttribute('disabled');
+    fetch(args);
+  }
 
   function validate() {
     var urlvalue = input.url.value.trim(),
