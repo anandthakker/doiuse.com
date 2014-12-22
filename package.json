@@ -35,6 +35,7 @@
     "ecstatic": "^0.5.8",
     "ldjson-stream": "^1.2.1",
     "mustache": "^0.8.2",
+    "next-stream": "^2.1.1",
     "normalize.css": "^3.0.2",
     "style-stream": "^1.1.1",
     "through2": "^0.6.3",

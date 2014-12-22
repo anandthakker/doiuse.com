@@ -148,6 +148,15 @@ footer > * {
 .results-view.show {
   display: block; }
 
+.error {
+  display: none; }
+
+.error.show {
+  display: block; }
+
+.error.show:after {
+  content: 'Also, you should tell Anand to style his error messages.'; }
+
 h1 {
   text-align: left; }
   @media (min-width: 500px) {

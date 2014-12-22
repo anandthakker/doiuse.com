@@ -48,6 +48,13 @@
         <ul id="results">
         </ul>
       </section>
+      <aside class="error">
+        There was some kind of error -- shocking, I know.  If you've got a minute, it would
+        please <a href="https://github.com/anandthakker/doiuse.com/issues">report it!</a>
+        <pre id="errorMessage">
+          
+        </pre>
+      </aside>
       
       <label>
         Paste HTML or CSS:
@@ -78,97 +85,6 @@
   </body>
   
   <script src="bundle.js"></script>
-  <script id="form-data" charset="utf-8">
-    var options = {};
-  </script>
-  <script charset="utf-8">
-    var doiuse = require('doiuse-browser'),
-      $ = document.querySelector.bind(document);
-
-    document.addEventListener('DOMContentLoaded', function() {
-      $('.fouc').classList.remove('fouc');
-      
-      // elements
-      var button = $('button');
-      var loading = $('.loading');
-      var resultsView = $('.results-view');
-      var results = $('#results');
-      var url = $('[name="url"]')
-      var browsers = $('[name="browsers"]')
-      var css = $('[name="css"]')
-      
-
-      // initialize classes
-      if(results.children.length > 0) resultsView.classList.add('show');
-
-      [ url, css, browsers ].forEach(function(el) {
-        el.addEventListener('keyup', updateOptions);
-        el.addEventListener('blur', updateOptions);
-      })
-      
-      // handle click & enter key field
-      button.addEventListener('click', fetch);
-      url.addEventListener('keyup', function(e) { if(e.keyCode === 13) fetch(); });
-      browsers.addEventListener('keyup', function(e) { if(e.keyCode === 13) fetch(); });
-
-
-      function updateOptions() {
-        options.url = url.value.trim();
-        options.css = css.value.trim();
-        options.browsers = browsers.value.trim();
-        console.log(options);
-        
-        // button state
-        if(options.url.length ? !options.css.length : options.css.length) // xor
-          button.removeAttribute('disabled');
-        else
-          button.setAttribute('disabled', true);
-      }
-
-      function fetch() {
-        if(button.getAttribute('disabled')) return;
-        resultsView.classList.remove('show');
-        loading.classList.add('show');
-        doiuse.process(options, update(options));
-      }
-      
-      function update(options, skipHistory) {
-        return function renderResponse(err, response) {
-          if(err) {
-            console.error(err);
-            // TODO: betterness.
-          }
-          else if(options.url === response.options.url &&
-            options.browsers === response.options.browsers) {
-            results.innerHTML = response.results;
-            resultsView.classList.add('show');
-            loading.classList.remove('show');
-            doiuse.prism.highlightAll();
-
-            url.value = options.url
-            css.value = options.css
-            browsers.value = options.browsers
-            
-            if(!skipHistory) saveState(response);
-          }
-        }
-      }
-      
-      function saveState(response) {
-        if((response.options.url || '').trim().length > 0) {
-          window.history.pushState(response, '', 
-          '/?url=' + response.options.url + '&browsers=' + (response.options.browsers || ''))
-        }
-      }
-      
-      window.addEventListener('popstate', function(event) {
-        options = event.state.options;
-        update(options, true)(null, event.state);
-      });
-      
-    }); // DOMContentLoaded
-    
-  </script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
