@@ -4,6 +4,7 @@ $font-size-base-md: 21px;
 $bluegreen: rgb(0, 120, 180);
 $orange: rgb(255, 120, 0);
 $red: rgb(200,0,40);
+$green: rgb(0, 175, 40);
 $black: #222;
 $lightgray: #eee;
 
@@ -218,6 +219,9 @@ input[name="url"] {
 
 .results-view.show { display: block; }
 
+.nolint {
+  color: $green;
+}
 
 .error {
   display: none;

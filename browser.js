@@ -1,12 +1,19 @@
 
+var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
 var xhr = require('xhr');
-var render = require('./lib/render');
+var mustache = require('mustache');
 
 // syntax highlighting
 require('./public/vendor/prism.css');
 var prism = require('./public/vendor/prism.js');
+
+var templates = {
+  feature: fs.readFileSync(__dirname + '/templates/feature.html', 'utf8'),
+  error: fs.readFileSync(__dirname + '/templates/error.html', 'utf8'),
+  nolint: fs.readFileSync(__dirname + '/templates/nolint.html', 'utf8')
+}
 
 // shorthand
 var $ = document.querySelector.bind(document);
@@ -16,8 +23,6 @@ var button = $('button');
 var loading = $('.loading');
 var resultsView = $('.results-view');
 var results = $('#results');
-var error = $('.error');
-var errorMessage = $('#errorMessage');
 
 var input = {
   url: $('[name="url"]'),
@@ -69,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (button.getAttribute('disabled')) return;
 
     resultsView.classList.remove('show');
-    error.classList.remove('show');
     loading.classList.add('show');
     
     if(!args) {
@@ -99,20 +103,24 @@ document.addEventListener('DOMContentLoaded', function() {
     loading.classList.remove('show');
     
     if (err) {
-      error.classList.add('show')
-      errorMessage.innerHTML = err.toString();
+      var errorMarkup = mustache.render(templates.error, {message: err.toString(), error: err })
+      resultsView.insertAdjacentHTML('afterend', errorMarkup)
     }
     else if(response.usages && response.usages.length > 0) {
       
       results.innerHTML = response.usages
         .map(function(usage) {
           usage.count = response.counts[usage.feature];
-          return render(usage);
+          return mustache.render(templates.feature ,usage);
         })
         .join('');
         
       resultsView.classList.add('show');
       prism.highlightAll();
+    }
+    else if(response.usages && response.usages.length === 0) {
+      var nolint = mustache.render(templates.nolint, {});
+      $('header').insertAdjacentHTML('beforeend', nolint);
     }
     
     if(response) {

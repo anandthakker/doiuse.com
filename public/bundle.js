@@ -1,13 +1,20 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/anand/dev/doiuse.com/browser.js":[function(require,module,exports){
 
+
 var url = require('url');
 var qs = require('querystring');
 var xhr = require('xhr');
-var render = require('./lib/render');
+var mustache = require('mustache');
 
 // syntax highlighting
 require('./public/vendor/prism.css');
 var prism = require('./public/vendor/prism.js');
+
+var templates = {
+  feature: "<li class=\"feature-usage\">\n  <div class=\"feature\">\n    <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n    <span class=\"count\">{{count}}</span>\n  </div>\n  <div class=\"browsers\">\n    <ul>\n      {{#missing}}\n      <li>{{browser}} {{versions}}</li>\n      {{/missing}}\n    </ul>\n  </div>\n  <div class=\"source\">\n    {{#source}}\n    <pre><code class=\"language-css\">{{content}}</code></pre>\n    {{/source}}\n  </div>\n</li>\n",
+  error: "<aside class=\"error\">\n  There was an error -- shocking, I know.  If you've got a minute,\n  please <a href=\"https://github.com/anandthakker/doiuse.com/issues\">report it!</a>\n  <div>\n    <p>{{message}}</p>\n    <pre>{{error.stack}}</pre>\n  </div>\n</aside>\n",
+  nolint: "<h1 class=\"nolint\">Answer: Nope! You're all clear!</h1>\n"
+}
 
 // shorthand
 var $ = document.querySelector.bind(document);
@@ -17,8 +24,6 @@ var button = $('button');
 var loading = $('.loading');
 var resultsView = $('.results-view');
 var results = $('#results');
-var error = $('.error');
-var errorMessage = $('#errorMessage');
 
 var input = {
   url: $('[name="url"]'),
@@ -70,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (button.getAttribute('disabled')) return;
 
     resultsView.classList.remove('show');
-    error.classList.remove('show');
     loading.classList.add('show');
     
     if(!args) {
@@ -100,20 +104,24 @@ document.addEventListener('DOMContentLoaded', function() {
     loading.classList.remove('show');
     
     if (err) {
-      error.classList.add('show')
-      errorMessage.innerHTML = err.toString();
+      var errorMarkup = mustache.render(templates.error, {message: err.toString(), error: err })
+      resultsView.insertAdjacentHTML('afterend', errorMarkup)
     }
     else if(response.usages && response.usages.length > 0) {
       
       results.innerHTML = response.usages
         .map(function(usage) {
           usage.count = response.counts[usage.feature];
-          return render(usage);
+          return mustache.render(templates.feature ,usage);
         })
         .join('');
         
       resultsView.classList.add('show');
       prism.highlightAll();
+    }
+    else if(response.usages && response.usages.length === 0) {
+      var nolint = mustache.render(templates.nolint, {});
+      $('header').insertAdjacentHTML('beforeend', nolint);
     }
     
     if(response) {
@@ -135,17 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 }); // DOMContentLoaded
 
-},{"./lib/render":"/Users/anand/dev/doiuse.com/lib/render.js","./public/vendor/prism.css":"/Users/anand/dev/doiuse.com/public/vendor/prism.css","./public/vendor/prism.js":"/Users/anand/dev/doiuse.com/public/vendor/prism.js","querystring":"/Users/anand/dev/doiuse.com/node_modules/watchify/node_modules/browserify/node_modules/querystring-es3/index.js","url":"/Users/anand/dev/doiuse.com/node_modules/watchify/node_modules/browserify/node_modules/url/url.js","xhr":"/Users/anand/dev/doiuse.com/node_modules/xhr/index.js"}],"/Users/anand/dev/doiuse.com/lib/render.js":[function(require,module,exports){
-
-var mustache = require('mustache');
-
-
-module.exports = render;
-
-var template = "<li class=\"feature-usage\">\n  <div class=\"feature\">\n    <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n    <span class=\"count\">{{count}}</span>\n  </div>\n  <div class=\"browsers\">\n    <ul>\n      {{#missing}}\n      <li>{{browser}} {{versions}}</li>\n      {{/missing}}\n    </ul>\n  </div>\n  <div class=\"source\">\n    {{#source}}\n    <pre><code class=\"language-css\">{{content}}</code></pre>\n    {{/source}}\n  </div>\n</li>\n";
-function render(usage) { return mustache.render(template, usage); }
-
-},{"mustache":"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js"}],"/Users/anand/dev/doiuse.com/node_modules/browserify-css/browser.js":[function(require,module,exports){
+},{"./public/vendor/prism.css":"/Users/anand/dev/doiuse.com/public/vendor/prism.css","./public/vendor/prism.js":"/Users/anand/dev/doiuse.com/public/vendor/prism.js","mustache":"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js","querystring":"/Users/anand/dev/doiuse.com/node_modules/watchify/node_modules/browserify/node_modules/querystring-es3/index.js","url":"/Users/anand/dev/doiuse.com/node_modules/watchify/node_modules/browserify/node_modules/url/url.js","xhr":"/Users/anand/dev/doiuse.com/node_modules/xhr/index.js"}],"/Users/anand/dev/doiuse.com/node_modules/browserify-css/browser.js":[function(require,module,exports){
 //
 // For more information about browser field, check out the browser field at https://github.com/substack/browserify-handbook#browser-field.
 //

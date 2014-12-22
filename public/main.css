@@ -186,6 +186,9 @@ input[name="url"] {
 .results-view.show {
   display: block; }
 
+.nolint {
+  color: #00af28; }
+
 .error {
   display: none;
   max-width: 30rem;

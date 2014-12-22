@@ -11,12 +11,8 @@ var ecstatic = require('ecstatic');
 var debug = require('debug')('doiuse:server');
 var logmem = require('./lib/logmem');
 
-var 
-    limit = require('./lib/limit'),
-    
-    cssFeatures = require('./lib/css-features'),
-    render = require('./lib/render');
-
+var limit = require('./lib/limit'),
+    cssFeatures = require('./lib/css-features');  
 
 
 var stat = ecstatic({root: __dirname + '/public',gzip: true});
@@ -35,10 +31,11 @@ var server = http.createServer(function(req, res) {
     .pipe(concat(function(args) {
       try {
         args = JSON.parse(args);
-        cssFeatures(args).pipe(res);
+        cssFeatures(args)
+        .pipe(res);
       } catch(e) {
-        debug('Error processing POST',data,e);
-        res.statusCode = 500;
+        debug('Error processing POST',args,e);
+        res.statusCode = 400;
         res.end();
       }
     }));
