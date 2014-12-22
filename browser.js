@@ -27,7 +27,6 @@ var input = {
 
 // onload
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('Welcome to doiuse.com.');
   $('.fouc').classList.remove('fouc');
 
   // watch for changes in the input fields.
@@ -52,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   var args = qs.parse(url.parse(window.location.href).query);
-  console.log(args);
   if(args.url || args.css) fetch(args);
 
   function validate() {
@@ -95,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function update(err, response, skipHistory) {
     if (err) {
-      console.error(err);
       error.classList.add('show')
       errorMessage.innerHTML = err.toString();
       return;

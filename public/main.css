@@ -114,6 +114,10 @@ footer > * {
     margin: 0; }
   .results-view .feature {
     padding: 3px 0 0 5px; }
+  .results-view .count:before {
+    content: '('; }
+  .results-view .count:after {
+    content: ')'; }
   .results-view .browsers {
     padding: 3px 0 0 5px; }
     .results-view .browsers li {

@@ -120,6 +120,10 @@ footer > * {
   }
   
   .feature { padding: 3px 0 0 5px; }
+  .count {
+    &:before { content: '('; }
+    &:after { content: ')'; }
+  }
   .browsers {
     padding: 3px 0 0 5px; 
     li { margin: 0; }

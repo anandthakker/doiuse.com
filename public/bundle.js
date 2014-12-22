@@ -28,7 +28,6 @@ var input = {
 
 // onload
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('Welcome to doiuse.com.');
   $('.fouc').classList.remove('fouc');
 
   // watch for changes in the input fields.
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   var args = qs.parse(url.parse(window.location.href).query);
-  console.log(args);
   if(args.url || args.css) fetch(args);
 
   function validate() {
@@ -96,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function update(err, response, skipHistory) {
     if (err) {
-      console.error(err);
       error.classList.add('show')
       errorMessage.innerHTML = err.toString();
       return;
@@ -137,7 +134,7 @@ var mustache = require('mustache');
 
 module.exports = render;
 
-var template = "<li class=\"feature-usage\">\n  <div class=\"feature\">\n    <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n  </div>\n  <div class=\"browsers\">\n    <ul>\n      {{#missing}}\n      <li>{{browser}} {{versions}}</li>\n      {{/missing}}\n    </ul>\n  </div>\n  <div class=\"source\">\n    {{#source}}\n    <pre><code class=\"language-css\">{{content}}</code></pre>\n    {{/source}}\n  </div>\n</li>\n";
+var template = "<li class=\"feature-usage\">\n  <div class=\"feature\">\n    <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n    <span class=\"count\">{{count}}</span>\n  </div>\n  <div class=\"browsers\">\n    <ul>\n      {{#missing}}\n      <li>{{browser}} {{versions}}</li>\n      {{/missing}}\n    </ul>\n  </div>\n  <div class=\"source\">\n    {{#source}}\n    <pre><code class=\"language-css\">{{content}}</code></pre>\n    {{/source}}\n  </div>\n</li>\n";
 function render(usage) { return mustache.render(template, usage); }
 
 },{"mustache":"/Users/anand/dev/doiuse.com/node_modules/mustache/mustache.js"}],"/Users/anand/dev/doiuse.com/node_modules/browserify-css/browser.js":[function(require,module,exports){
