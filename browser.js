@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if(response.usages && response.usages.length > 0) {
+      
       results.innerHTML = response.usages
         .map(function(usage) {
           usage.count = response.counts[usage.feature];
@@ -116,8 +117,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if(input[k]) input[k].value = response.args[k];
 
     var query = qs.stringify(response.args);
-    if (!skipHistory && query.length < 1e6)
+    if (!skipHistory && query.length < 1e6) {
       window.history.pushState(response, '', '/?' + query);
+      $('#json-link').setAttribute('href', '/api?' + query);
+    }
   }
 
   window.addEventListener('popstate', function(event) {

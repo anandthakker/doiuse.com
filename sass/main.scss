@@ -72,22 +72,24 @@ body > footer {
 
 footer {
   font-size: .5em;
-  @media (min-width: 900px) { font-size: .875em; }
-  text-align: justify;
-}
+  @media (min-width: 900px) {
+    font-size: .875em;
 
-/* "justify" block contents */
-footer:after {
-  content: ' ';
-  display: inline-block;
-  width: 100%;
-  height: 1px;
-  visibility: hidden;
-}
-footer > * {
-  margin-top: 0;
-  display: inline-block;
-  vertical-align: top;
+    /* "justify" block contents */
+    text-align: justify;
+    footer:after {
+      content: ' ';
+      display: inline-block;
+      width: 100%;
+      height: 1px;
+      visibility: hidden;
+    }
+    footer > * {
+      margin-top: 0;
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
 }
 
 .credits p { margin: 0; }
@@ -112,11 +114,20 @@ footer > * {
     text-align: left;
     font-weight: bold;
   }
-  div {
+
+  #json-link {
+    display: block;
+    text-align: right;
+  }
+  
+  .feature,
+  .browsers,
+  .source {
     display: inline-block;
     vertical-align: top;
     overflow-x: scroll;
     margin: 0;
+    clear: both;
   }
   
   .feature { padding: 3px 0 0 5px; }

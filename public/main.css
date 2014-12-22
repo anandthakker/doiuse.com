@@ -61,24 +61,22 @@ body > footer {
   border-top: 2px solid black; }
 
 footer {
-  font-size: 0.5em;
-  text-align: justify; }
+  font-size: 0.5em; }
   @media (min-width: 900px) {
     footer {
-      font-size: 0.875em; } }
-
-/* "justify" block contents */
-footer:after {
-  content: ' ';
-  display: inline-block;
-  width: 100%;
-  height: 1px;
-  visibility: hidden; }
-
-footer > * {
-  margin-top: 0;
-  display: inline-block;
-  vertical-align: top; }
+      font-size: 0.875em;
+      /* "justify" block contents */
+      text-align: justify; }
+      footer footer:after {
+        content: ' ';
+        display: inline-block;
+        width: 100%;
+        height: 1px;
+        visibility: hidden; }
+      footer footer > * {
+        margin-top: 0;
+        display: inline-block;
+        vertical-align: top; } }
 
 .credits p {
   margin: 0; }
@@ -107,11 +105,15 @@ footer > * {
   .results-view header {
     text-align: left;
     font-weight: bold; }
-  .results-view div {
+  .results-view #json-link {
+    display: block;
+    text-align: right; }
+  .results-view .feature, .results-view .browsers, .results-view .source {
     display: inline-block;
     vertical-align: top;
     overflow-x: scroll;
-    margin: 0; }
+    margin: 0;
+    clear: both; }
   .results-view .feature {
     padding: 3px 0 0 5px; }
   .results-view .count:before {
