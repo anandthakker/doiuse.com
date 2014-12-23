@@ -76,6 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     resultsView.classList.remove('show');
     loading.classList.add('show');
+    var errorEl = $('.error');
+    errorEl.parentNode.removeChild(errorEl);
     
     if(!args) {
       args = {};
