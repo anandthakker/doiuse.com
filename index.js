@@ -43,6 +43,7 @@ var server = http.createServer(function(req, res) {
   // GET /api?..., same args and response as POST /.
   else if(/^\/api/.test(req.url)) {
     var args = qs.parse(url.parse(req.url).query);
+    res.setHeader('Content-Type', 'application/json');
     cssFeatures(args).pipe(res);
   }
   else if(/^\/?((\?.*)|$)/.test(req.url)) {
