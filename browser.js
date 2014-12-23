@@ -20,7 +20,7 @@ var $ = document.querySelector.bind(document);
 $.remove = function(el) {
   if(typeof el === 'string') el = $(el);
   if(!el) return;
-  el.parent.removeChild(el);
+  el.parentNode.removeChild(el);
 }
 
 // elements
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function validate() {
     var urlvalue = input.url.value.trim(),
       cssvalue = input.css.value.trim();
-    if (urlvalue.length ? !cssvalue.length : cssvalue.length) // xor
+    if (/\./.test(urlvalue) ? !cssvalue.length : cssvalue.length) // xor
       button.removeAttribute('disabled');
     else
       button.setAttribute('disabled', true);
@@ -79,7 +79,11 @@ document.addEventListener('DOMContentLoaded', function() {
     loading.classList.add('show');
     $.remove('.error');
     $.remove('.results');
-    
+
+    if((input.url.value || '').trim().length > 0
+    && !/^http/.test(input.url.value)) {
+      input.url.value = input.url.value.replace(/^|^.*:\/\//, 'http://');
+    }
     if(!args) {
       args = {};
       for(k in input) args[k] = input[k].value;
