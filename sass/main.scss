@@ -259,8 +259,10 @@ body > footer {
   section {
     padding-top: .5em;
   }
-  .credits {
+  * + section {
     border-top: 2px solid $lightgray;
+  }
+  .credits {
     
     p { margin: .75em 0 0 0; }
     
@@ -287,4 +289,7 @@ body > footer {
   .credits li:not(:last-child):after { content: ','; }
   .credits li:last-child:after { content: '.'; }
   
+  .help {
+    li { margin: 0; }
+  }
 }

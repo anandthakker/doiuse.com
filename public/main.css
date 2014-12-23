@@ -219,26 +219,26 @@ body > footer {
   font-size: 0.625em; }
   body > footer section {
     padding-top: 0.5em; }
-  body > footer .credits {
+  body > footer * + section {
     border-top: 2px solid #eee; }
-    body > footer .credits p {
-      margin: 0.75em 0 0 0; }
-    @media (min-width: 900px) {
-      body > footer .credits {
-        /* "justify" inline-block contents */
-        text-align: justify; }
-        body > footer .credits p {
-          margin: 0; }
-        body > footer .credits:after {
-          content: ' ';
-          display: inline-block;
-          width: 100%;
-          height: 1px;
-          visibility: hidden; }
-        body > footer .credits > * {
-          margin-top: 0;
-          display: inline-block;
-          vertical-align: top; } }
+  body > footer .credits p {
+    margin: 0.75em 0 0 0; }
+  @media (min-width: 900px) {
+    body > footer .credits {
+      /* "justify" inline-block contents */
+      text-align: justify; }
+      body > footer .credits p {
+        margin: 0; }
+      body > footer .credits:after {
+        content: ' ';
+        display: inline-block;
+        width: 100%;
+        height: 1px;
+        visibility: hidden; }
+      body > footer .credits > * {
+        margin-top: 0;
+        display: inline-block;
+        vertical-align: top; } }
   body > footer .credits li {
     display: inline-block;
     margin: 0; }
@@ -246,3 +246,5 @@ body > footer {
     content: ','; }
   body > footer .credits li:last-child:after {
     content: '.'; }
+  body > footer .help li {
+    margin: 0; }
