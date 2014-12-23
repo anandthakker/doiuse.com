@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loading.classList.add('show');
     $.remove('.error');
     $.remove('.results');
+    $.remove('.nolint');
 
     if((input.url.value || '').trim().length > 0
     && !/^http/.test(input.url.value)) {
