@@ -6,6 +6,7 @@ $orange: rgb(255, 120, 0);
 $red: rgb(200,0,40);
 $green: rgb(0, 175, 40);
 $black: #222;
+$gray: #bbb;
 $lightgray: #eee;
 
 /* Paul Irish: apply a natural box layout model to all elements, but allowing components to change */
@@ -133,14 +134,23 @@ input[name="url"] {
 
 
 
-.results-view { 
-  display: none;
+.results { 
   font-size: .625em;
   @media (min-width: 500px) { font-size: .875em; }
+  
+  .input-size,
+  #json-link {
+    font-weight: normal;
+    margin: 0 0 .5em 0;
+  }
+  .input-size { float: left; color: $gray; }
+  #json-link { float: right; }
   
   header {
     text-align: left;
     font-weight: bold;
+    margin-top: .25em;
+    clear: both;
   }
 
   header,
@@ -159,11 +169,6 @@ input[name="url"] {
     background: $lightgray;
   }
 
-  #json-link {
-    display: block;
-    text-align: right;
-  }
-  
   .feature,
   .browsers,
   .source {
@@ -217,14 +222,11 @@ input[name="url"] {
   }
 }
 
-.results-view.show { display: block; }
-
 .nolint {
   color: $green;
 }
 
 .error {
-  display: none;
   max-width: 30rem;
   margin: 1em auto;
   font-size: .875em;
@@ -235,9 +237,8 @@ input[name="url"] {
   #errorMessage {
     background-color: rgba($red, .05);
   }
+  &:after { content: 'Also, you should tell Anand to style his error messages.'}
 }
-.error.show { display: block; }
-.error.show:after { content: 'Also, you should tell Anand to style his error messages.'}
 
 /* github icons */
 a[href*="github.com/anandthakker/doiuse.com"] {

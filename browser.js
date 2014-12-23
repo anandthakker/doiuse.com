@@ -10,19 +10,22 @@ require('./public/vendor/prism.css');
 var prism = require('./public/vendor/prism.js');
 
 var templates = {
-  feature: fs.readFileSync(__dirname + '/templates/feature.html', 'utf8'),
+  results: fs.readFileSync(__dirname + '/templates/results.html', 'utf8'),
   error: fs.readFileSync(__dirname + '/templates/error.html', 'utf8'),
   nolint: fs.readFileSync(__dirname + '/templates/nolint.html', 'utf8')
 }
 
 // shorthand
 var $ = document.querySelector.bind(document);
+$.remove = function(el) {
+  if(typeof el === 'string') el = $(el);
+  if(!el) return;
+  el.parent.removeChild(el);
+}
 
 // elements
 var button = $('button');
 var loading = $('.loading');
-var resultsView = $('.results-view');
-var results = $('#results');
 
 var input = {
   url: $('[name="url"]'),
@@ -73,10 +76,9 @@ document.addEventListener('DOMContentLoaded', function() {
   function fetch(args) {
     if (button.getAttribute('disabled')) return;
 
-    resultsView.classList.remove('show');
     loading.classList.add('show');
-    var errorEl = $('.error');
-    errorEl.parentNode.removeChild(errorEl);
+    $.remove('.error');
+    $.remove('.results');
     
     if(!args) {
       args = {};
@@ -106,18 +108,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (err) {
       var errorMarkup = mustache.render(templates.error, {message: err.toString(), error: err })
-      resultsView.insertAdjacentHTML('afterend', errorMarkup)
+      loading.insertAdjacentHTML('beforebegin', errorMarkup)
     }
-    else if(response.usages && response.usages.length > 0) {
-      
-      results.innerHTML = response.usages
-        .map(function(usage) {
-          usage.count = response.counts[usage.feature];
-          return mustache.render(templates.feature ,usage);
-        })
-        .join('');
-        
-      resultsView.classList.add('show');
+    else if((response.usages || []).length > 0) {
+      response.usages.forEach(function(usage) {
+        usage.count = response.counts[usage.feature];
+      })
+      loading.insertAdjacentHTML('beforebegin', mustache.render(templates.results, response));
       prism.highlightAll();
     }
     else if(response.usages && response.usages.length === 0) {
@@ -133,7 +130,8 @@ document.addEventListener('DOMContentLoaded', function() {
       var query = qs.stringify(response.args);
       if (!skipHistory && query.length > 0 && query.length < 1e6) {
         window.history.pushState(response, '', '/?' + query);
-        $('#json-link').setAttribute('href', '/api?' + query);
+        var json;
+        if(json = $('#json-link')) json.setAttribute('href', '/api?' + query);
       }
     }
   }

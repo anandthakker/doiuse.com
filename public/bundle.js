@@ -11,19 +11,22 @@ require('./public/vendor/prism.css');
 var prism = require('./public/vendor/prism.js');
 
 var templates = {
-  feature: "<li class=\"feature-usage\">\n  <div class=\"feature\">\n    <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n    <span class=\"count\">{{count}}</span>\n  </div>\n  <div class=\"browsers\">\n    <ul>\n      {{#missing}}\n      <li>{{browser}} {{versions}}</li>\n      {{/missing}}\n    </ul>\n  </div>\n  <div class=\"source\">\n    {{#source}}\n    <pre><code class=\"language-css\">{{content}}</code></pre>\n    {{/source}}\n  </div>\n</li>\n",
+  results: "<section class=\"results\">\n  <aside>\n    <div class=\"input-size\">Read {{size}} bytes of CSS.</div>\n    <a id=\"json-link\" href=\"{{json}}\" title=\"because machines are people too.\">\n      Gimme JSON\n    </a>\n  </aside>\n  <header>\n    <div class=\"feature\">\n      Feature <span class=\"count\">count</span>\n    </div>\n    <div class=\"browsers\">\n      Browsers Missing Support\n    </div>\n    <div class=\"source\">\n      Example (from your source)\n    </div>\n  </header>\n  <ul id=\"features\">\n    {{#usages}}\n    <li class=\"feature-usage\">\n      <div class=\"feature\">\n        <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n        <span class=\"count\">{{count}}</span>\n      </div>\n      <div class=\"browsers\">\n        <ul>\n          {{#missing}}\n          <li>{{browser}} {{versions}}</li>\n          {{/missing}}\n        </ul>\n      </div>\n      <div class=\"source\">\n        {{#source}}\n        <pre><code class=\"language-css\">{{content}}</code></pre>\n        {{/source}}\n      </div>\n    </li>\n    {{/usages}}\n  </ul>\n</section>\n",
   error: "<aside class=\"error\">\n  There was an error -- shocking, I know.  If you've got a minute,\n  please <a href=\"https://github.com/anandthakker/doiuse.com/issues\">report it!</a>\n  <div>\n    <p>{{message}}</p>\n    <pre>{{error.stack}}</pre>\n  </div>\n</aside>\n",
   nolint: "<h1 class=\"nolint\">Answer: Nope! You're all clear!</h1>\n"
 }
 
 // shorthand
 var $ = document.querySelector.bind(document);
+$.remove = function(el) {
+  if(typeof el === 'string') el = $(el);
+  if(!el) return;
+  el.parent.removeChild(el);
+}
 
 // elements
 var button = $('button');
 var loading = $('.loading');
-var resultsView = $('.results-view');
-var results = $('#results');
 
 var input = {
   url: $('[name="url"]'),
@@ -74,10 +77,9 @@ document.addEventListener('DOMContentLoaded', function() {
   function fetch(args) {
     if (button.getAttribute('disabled')) return;
 
-    resultsView.classList.remove('show');
     loading.classList.add('show');
-    var errorEl = $('.error');
-    errorEl.parentNode.removeChild(errorEl);
+    $.remove('.error');
+    $.remove('.results');
     
     if(!args) {
       args = {};
@@ -107,18 +109,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (err) {
       var errorMarkup = mustache.render(templates.error, {message: err.toString(), error: err })
-      resultsView.insertAdjacentHTML('afterend', errorMarkup)
+      loading.insertAdjacentHTML('beforebegin', errorMarkup)
     }
-    else if(response.usages && response.usages.length > 0) {
-      
-      results.innerHTML = response.usages
-        .map(function(usage) {
-          usage.count = response.counts[usage.feature];
-          return mustache.render(templates.feature ,usage);
-        })
-        .join('');
-        
-      resultsView.classList.add('show');
+    else if((response.usages || []).length > 0) {
+      response.usages.forEach(function(usage) {
+        usage.count = response.counts[usage.feature];
+      })
+      loading.insertAdjacentHTML('beforebegin', mustache.render(templates.results, response));
       prism.highlightAll();
     }
     else if(response.usages && response.usages.length === 0) {
@@ -134,7 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
       var query = qs.stringify(response.args);
       if (!skipHistory && query.length > 0 && query.length < 1e6) {
         window.history.pushState(response, '', '/?' + query);
-        $('#json-link').setAttribute('href', '/api?' + query);
+        var json;
+        if(json = $('#json-link')) json.setAttribute('href', '/api?' + query);
       }
     }
   }

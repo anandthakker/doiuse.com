@@ -110,87 +110,89 @@ input[name="url"] {
   font-size: inherit;
   width: 100%; }
 
-.results-view {
-  display: none;
+.results {
   font-size: 0.625em; }
   @media (min-width: 500px) {
-    .results-view {
+    .results {
       font-size: 0.875em; } }
-  .results-view header {
+  .results .input-size, .results #json-link {
+    font-weight: normal;
+    margin: 0 0 0.5em 0; }
+  .results .input-size {
+    float: left;
+    color: #bbb; }
+  .results #json-link {
+    float: right; }
+  .results header {
     text-align: left;
-    font-weight: bold; }
-  .results-view header, .results-view .feature-usage {
+    font-weight: bold;
+    margin-top: 0.25em;
+    clear: both; }
+  .results header, .results .feature-usage {
     padding: 0.5em 0.125em 0.625em 0.5em; }
     @media (min-width: 500px) {
-      .results-view header, .results-view .feature-usage {
+      .results header, .results .feature-usage {
         padding: 0.25em 0.125em 0.125em 0.25em; } }
-  .results-view .feature-usage {
+  .results .feature-usage {
     margin-top: 0; }
-  .results-view .feature-usage:last-child {
+  .results .feature-usage:last-child {
     padding-bottom: 1em;
     border-bottom: 2px solid #eee; }
-  .results-view header, .results-view .feature-usage:nth-child(even) {
+  .results header, .results .feature-usage:nth-child(even) {
     background: #eee; }
-  .results-view #json-link {
-    display: block;
-    text-align: right; }
-  .results-view .feature, .results-view .browsers, .results-view .source {
+  .results .feature, .results .browsers, .results .source {
     display: inline-block;
     vertical-align: top;
     overflow-x: scroll;
     margin: 0;
     clear: both; }
-  .results-view .count:before {
+  .results .count:before {
     content: '('; }
-  .results-view .count:after {
+  .results .count:after {
     content: ')'; }
-  .results-view .browsers li {
+  .results .browsers li {
     margin: 0; }
-  .results-view .source .language-css {
+  .results .source .language-css {
     font-family: inherit;
     line-height: inherit; }
-    .results-view .source .language-css .token {
+    .results .source .language-css .token {
       background: none !important; }
-  .results-view .source pre {
+  .results .source pre {
     background: none;
     margin: 0;
     padding: 0; }
-  .results-view .feature {
+  .results .feature {
     width: 48%; }
-  .results-view .browsers {
+  .results .browsers {
     width: 49%; }
-  .results-view .source {
+  .results .source {
     width: 100%; }
-    .results-view .source:before {
+    .results .source:before {
       content: 'E.g.:';
       display: block;
       font-weight: bold; }
-  .results-view header .source {
+  .results header .source {
     display: none; }
   @media (min-width: 900px) {
-    .results-view .feature {
+    .results .feature {
       width: 32%; }
 
-    .results-view .browsers {
+    .results .browsers {
       width: 32%; }
 
-    .results-view .source {
+    .results .source {
       width: 32%; }
-      .results-view .source:before {
+      .results .source:before {
         display: none; }
 
-    .results-view header .source {
+    .results header .source {
       display: inline-block; }
  }
-
-.results-view.show {
-  display: block; }
 
 .nolint {
   color: #00af28; }
 
 .error {
-  display: none;
   max-width: 30rem;
   margin: 1em auto;
   font-size: 0.875em;
@@ -199,12 +201,8 @@ input[name="url"] {
   color: #c80028; }
   .error #errorMessage {
     background-color: rgba(200, 0, 40, 0.05); }
-
-.error.show {
-  display: block; }
-
-.error.show:after {
-  content: 'Also, you should tell Anand to style his error messages.'; }
+  .error:after {
+    content: 'Also, you should tell Anand to style his error messages.'; }
 
 /* github icons */
 a[href*="github.com/anandthakker/doiuse.com"] {
