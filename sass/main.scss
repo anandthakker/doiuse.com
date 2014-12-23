@@ -254,33 +254,37 @@ a[href*="github.com/anandthakker/doiuse.com"] {
 
 body > footer {
   width: 100%;
-  border-top: 2px solid $lightgray;
-  padding-top: .5em;
-}
+  font-size: .625em;
 
-footer {
-  font-size: .5em;
-  @media (min-width: 900px) {
-    font-size: .875em;
+  section {
+    padding-top: .5em;
+  }
+  .credits {
+    border-top: 2px solid $lightgray;
     
-    /* "justify" inline-block contents */
-    text-align: justify;
-    &:after {
-      content: ' ';
-      display: inline-block;
-      width: 100%;
-      height: 1px;
-      visibility: hidden;
-    }
-    & > * {
-      margin-top: 0;
-      display: inline-block;
-      vertical-align: top;
+    p { margin: .75em 0 0 0; }
+    
+    @media (min-width: 900px) {
+      p { margin: 0; }
+      
+      /* "justify" inline-block contents */
+      text-align: justify;
+      &:after {
+        content: ' ';
+        display: inline-block;
+        width: 100%;
+        height: 1px;
+        visibility: hidden;
+      }
+      & > * {
+        margin-top: 0;
+        display: inline-block;
+        vertical-align: top;
+      }
     }
   }
+  .credits li { display: inline-block; margin: 0; }
+  .credits li:not(:last-child):after { content: ','; }
+  .credits li:last-child:after { content: '.'; }
+  
 }
-
-.credits p { margin: 0; }
-.credits li { display: inline-block; margin: 0; }
-.credits li:not(:last-child):after { content: ','; }
-.credits li:last-child:after { content: '.'; }
