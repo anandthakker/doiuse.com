@@ -110,6 +110,10 @@ input[name="url"] {
   font-size: inherit;
   width: 100%; }
 
+.input-size {
+  color: #bbb;
+  text-align: left; }
+
 .results {
   font-size: 0.625em; }
   @media (min-width: 500px) {
@@ -119,8 +123,7 @@ input[name="url"] {
     font-weight: normal;
     margin: 0 0 0.5em 0; }
   .results .input-size {
-    float: left;
-    color: #bbb; }
+    float: left; }
   .results #json-link {
     float: right; }
   .results header {

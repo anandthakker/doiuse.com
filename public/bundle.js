@@ -13,7 +13,7 @@ var prism = require('./public/vendor/prism.js');
 var templates = {
   results: "<section class=\"results\">\n  <aside>\n    <div class=\"input-size\">Read {{size}} bytes of CSS.</div>\n    <a id=\"json-link\" href=\"{{json}}\" title=\"because machines are people too.\">\n      Gimme JSON\n    </a>\n  </aside>\n  <header>\n    <div class=\"feature\">\n      Feature <span class=\"count\">count</span>\n    </div>\n    <div class=\"browsers\">\n      Browsers Missing Support\n    </div>\n    <div class=\"source\">\n      Example (from your source)\n    </div>\n  </header>\n  <ul id=\"features\">\n    {{#usages}}\n    <li class=\"feature-usage\">\n      <div class=\"feature\">\n        <a href=\"http://caniuse.com/{{feature}}\" title=\"caniuse.com info for {{feature}}\"\n        target=\"_blank\">{{title}}</a>\n        <span class=\"count\">{{count}}</span>\n      </div>\n      <div class=\"browsers\">\n        <ul>\n          {{#missing}}\n          <li>{{browser}} {{versions}}</li>\n          {{/missing}}\n        </ul>\n      </div>\n      <div class=\"source\">\n        {{#source}}\n        <pre><code class=\"language-css\">{{content}}</code></pre>\n        {{/source}}\n      </div>\n    </li>\n    {{/usages}}\n  </ul>\n</section>\n",
   error: "<aside class=\"error\">\n  There was an error -- shocking, I know.  If you've got a minute,\n  please <a href=\"https://github.com/anandthakker/doiuse.com/issues\">report it!</a>\n  <div>\n    <p>{{message}}</p>\n    <pre>{{error.stack}}</pre>\n  </div>\n</aside>\n",
-  nolint: "<h1 class=\"nolint\">Answer: Nope! You're all clear!</h1>\n"
+  nolint: "<h1 class=\"nolint\">Answer: Nope! You're all clear!</h1>\n<div class=\"input-size\">Read {{size}} bytes of CSS.</div>\n"
 }
 
 // shorthand
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
       prism.highlightAll();
     }
     else if(response.usages && response.usages.length === 0) {
-      var nolint = mustache.render(templates.nolint, {});
+      var nolint = mustache.render(templates.nolint, response);
       $('header').insertAdjacentHTML('beforeend', nolint);
     }
     

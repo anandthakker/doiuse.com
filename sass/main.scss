@@ -133,6 +133,10 @@ input[name="url"] {
 }
 
 
+.input-size {
+  color: $gray;
+  text-align: left;
+}
 
 .results { 
   font-size: .625em;
@@ -143,7 +147,7 @@ input[name="url"] {
     font-weight: normal;
     margin: 0 0 .5em 0;
   }
-  .input-size { float: left; color: $gray; }
+  .input-size { float: left; }
   #json-link { float: right; }
   
   header {

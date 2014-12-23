@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
       prism.highlightAll();
     }
     else if(response.usages && response.usages.length === 0) {
-      var nolint = mustache.render(templates.nolint, {});
+      var nolint = mustache.render(templates.nolint, response);
       $('header').insertAdjacentHTML('beforeend', nolint);
     }
     
