@@ -37,7 +37,7 @@
     "mustache": "^0.8.2",
     "next-stream": "^2.1.1",
     "normalize.css": "^3.0.2",
-    "style-stream": "^1.1.1",
+    "style-stream": "^1.1.4",
     "through2": "^0.6.3",
     "trumpet": "^1.7.0",
     "xhr": "^2.0.0"
