@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 
   // handle click & enter key field
-  button.addEventListener('click', function (e) { fetch(); })
+  button.addEventListener('click', function (e) { fetch() })
   ;[
     input.url,
     input.browsers
@@ -64,12 +64,13 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function validate () {
-    var urlvalue = input.url.value.trim(),
-      cssvalue = input.css.value.trim()
-    if (/\./.test(urlvalue) ? !cssvalue.length : cssvalue.length) // xor
+    var urlvalue = input.url.value.trim()
+    var cssvalue = input.css.value.trim()
+    if (/\./.test(urlvalue) ? !cssvalue.length : cssvalue.length) {
       button.removeAttribute('disabled')
-    else
+    } else {
       button.setAttribute('disabled', true)
+    }
   }
 
   function fetch (args) {
@@ -80,13 +81,12 @@ document.addEventListener('DOMContentLoaded', function () {
     $.remove('.results')
     $.remove('.nolint')
 
-    if ((input.url.value || '').trim().length > 0
-      && !/^http/.test(input.url.value)) {
+    if ((input.url.value || '').trim().length > 0 && !/^http/.test(input.url.value)) {
       input.url.value = input.url.value.replace(/^|^.*:\/\//, 'http://')
     }
     if (!args) {
       args = {}
-      for (k in input) args[k] = input[k].value
+      for (var k in input) args[k] = input[k].value
     }
 
     xhr({
@@ -97,44 +97,52 @@ document.addEventListener('DOMContentLoaded', function () {
     },
       function (err, resp, body) {
         try {
-          if (!(resp.statusCode >= 200 && resp.statusCode < 400))
+          if (!(resp.statusCode >= 200 && resp.statusCode < 400)) {
             throw new Error('The server responded with a bad status: ' + resp.statusCode)
+          }
           body = JSON.parse(body)
-        } catch(e) { err = e; }
-        update(err, body || resp)
+        } catch (e) { err = e }
+        body = body || resp
+        body.args = body.args || args
+        update(err, body)
       })
   }
-
 
   function update (err, response, skipHistory) {
     loading.classList.remove('show')
 
+    err = err || response.error
     if (err) {
-      var errorMarkup = mustache.render(templates.error, {message: err.toString(), error: err })
+      console.log('API response error', err, response)
+      var errorMarkup = mustache.render(templates.error, {
+        message: JSON.stringify(err, null, 2),
+        args: response && JSON.stringify(response.args, null, 2),
+        error: err
+      })
       loading.insertAdjacentHTML('beforebegin', errorMarkup)
     }
-    else if ((response.usages || []).length > 0) {
-      response.usages.forEach(function (usage) {
-        usage.count = response.counts[usage.feature]
-      })
-      loading.insertAdjacentHTML('beforebegin', mustache.render(templates.results, response))
-      prism.highlightAll()
-    }
-    else if (response.usages && response.usages.length === 0) {
-      var nolint = mustache.render(templates.nolint, response)
-      $('header').insertAdjacentHTML('beforeend', nolint)
-    }
 
-    if (response) {
+    if (response && response.usages) {
+      if (response.usages.length) {
+        response.usages.forEach(function (usage) {
+          usage.count = response.counts[usage.feature]
+        })
+        loading.insertAdjacentHTML('beforebegin', mustache.render(templates.results, response))
+        prism.highlightAll()
+      } else {
+        var nolint = mustache.render(templates.nolint, response)
+        $('header').insertAdjacentHTML('beforeend', nolint)
+      }
+
       // populate input fields with the args that were used for this query.
-      for (k in response.args)
+      for (var k in response.args)
         if (input[k]) input[k].value = response.args[k]
 
       var query = qs.stringify(response.args)
       if (!skipHistory && query.length > 0 && query.length < 1e6) {
         window.history.pushState(response, '', '/?' + query)
-        var json
-        if (json = $('#json-link')) json.setAttribute('href', '/api?' + query)
+        var json = $('#json-link')
+        if (json) json.setAttribute('href', '/api?' + query)
       }
     }
   }
@@ -142,5 +150,4 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('popstate', function (event) {
     update(null, event.state)
   })
-
 }) // DOMContentLoaded

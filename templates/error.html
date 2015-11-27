@@ -2,7 +2,14 @@
   There was an error -- shocking, I know.  If you've got a minute,
   please <a href="https://github.com/anandthakker/doiuse.com/issues">report it!</a>
   <div>
-    <p>{{message}}</p>
+    {{#args}}
+    <h3>Request Arguments</h3>
+    <pre>{{args}}</pre>
+    {{/args}}
+    <h3>Error</h3>
+    <pre>{{message}}</pre>
+    {{#error.stack}}
     <pre>{{error.stack}}</pre>
+    {{/error.stack}}
   </div>
 </aside>
