@@ -13,17 +13,26 @@ var cssFeatures = require('./lib/css-features')
 var stat = ecstatic({root: __dirname + '/public', gzip: true})
 
 var server = http.createServer(function (req, res) {
-  debug(req.method, req.url)
+  var ip = req.headers['x-forwarded-for'] ||
+     req.connection.remoteAddress ||
+     req.socket.remoteAddress ||
+     req.connection.socket.remoteAddress
 
   // POST /
   // arguments (either query string or POST body) should have either `url` xor
   // `css` property, and optional `browsers`.
   // response is {args: {given args}, usages: [usages of queried features], count:{feature:count}}
+  if (req.method !== 'POST') {
+    console.log([Date.now(), req.method, req.url, ip].join('\t'))
+  }
+
   if (req.method === 'POST') {
     pipe(
       req,
       limit(1e6, function () { req.connection.destroy() }),
       concat(function (args) {
+        console.log([Date.now(), req.method, req.url, ip, args.length + ' B'].join('\t'))
+
         try {
           args = JSON.parse(args)
         } catch (e) {

@@ -40,7 +40,7 @@
     "browserify": "^12.0.1",
     "browserify-css": "^0.2.0",
     "debug": "^2.1.0",
-    "doiuse": "^0.2.5",
+    "doiuse": "^2.0.2",
     "ecstatic": "^0.5.8",
     "from2-string": "^1.1.0",
     "mississippi": "^1.1.1",
