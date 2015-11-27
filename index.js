@@ -1,9 +1,7 @@
-var fs = require('fs')
 var http = require('http')
 var qs = require('querystring')
 var url = require('url')
 var concat = require('concat-stream')
-var trumpet = require('trumpet')
 var ecstatic = require('ecstatic')
 
 var debug = require('debug')('doiuse:server')
@@ -39,15 +37,6 @@ var server = http.createServer(function (req, res) {
     var args = qs.parse(url.parse(req.url).query)
     res.setHeader('Content-Type', 'application/json')
     cssFeatures(args).pipe(res)
-  } else if (/^\/?((\?.*)|$)/.test(req.url)) {
-    var index = trumpet()
-    // inline styles to avoid flash of unstyled content.
-    fs.createReadStream(__dirname + '/public/main.css')
-      .pipe(index.select('#anti-fouc').createWriteStream())
-
-    fs.createReadStream(__dirname + '/public/index.html')
-      .pipe(index)
-      .pipe(res)
   } else {
     stat(req, res)
   }

@@ -8,9 +8,8 @@
     <meta name="description" content="doiuse.com: Lint your CSS againt autoprefixer-like browser queries.">
     <script async="" src="//www.google-analytics.com/analytics.js"></script>
     <title>doiuse...?</title>
+    <link rel="stylesheet" href="/main.css" media="screen" charset="utf-8">
     <link rel="stylesheet" href="/vendor/normalize.css" media="screen" charset="utf-8">
-    <style id="anti-fouc">
-    </style>
     <link rel="stylesheet" href="/vendor/atebits.css" media="screen" charset="utf-8">
   </head>
   <body class="fouc">
@@ -24,23 +23,23 @@
         <nobr><input type="text" name="browsers" value="" placeholder="> 1%,last 2 versions,Firefox ESR,Opera 12.1">?</nobr>
       </h1>
     </header>
-    
+
     <section>
       <label>
         Paste URL:
         <input type="url" name="url" value="" placeholder="http://www.w3.org/standards/">
       </label>
-      
+
       <aside class="loading">
         <div class="atebits">Loading...</div>
       </aside>
-      
+
       <label>
         Paste HTML or CSS:
         <textarea name="css" rows="10" cols="40"></textarea>
       </label>
     </section>
-    
+
     <footer>
       <section>
         Linter-like CLI/Node module available <a href="https://github.com/anandthakker/doiuse">here</a>.
@@ -52,7 +51,7 @@
           <li>last 2 versions</li>
           <li>last 2 Chrome versions</li>
           <li>&gt; 5% (based on caniuse.com's usage stats)</li>
-          <li>Firefox > 20</li>
+          <li>Firefox &gt; 20</li>
           <li>ff <= 20</li>
           <li>ios 7</li>
           <li><a href="https://github.com/postcss/autoprefixer#browsers">etc.</a></li>
@@ -79,14 +78,14 @@
       </section>
     </footer>
   </body>
-  
+
   <script src="bundle.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    
+
     ga('create', 'UA-57788588-1', 'auto');
     ga('send', 'pageview');
   </script>

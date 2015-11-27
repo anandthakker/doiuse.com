@@ -5,8 +5,8 @@ var xhr = require('xhr')
 var mustache = require('mustache')
 
 // syntax highlighting
-require('./public/vendor/prism.css')
-var prism = require('./public/vendor/prism.js')
+require('./node_modules/prismjs/themes/prism.css')
+var prism = require('prismjs')
 
 var templates = {
   results: fs.readFileSync(__dirname + '/templates/results.html', 'utf8'),
