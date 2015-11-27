@@ -44,6 +44,11 @@ var server = http.createServer(function (req, res) {
     // GET /api?..., same args and response as POST /.
     var args = qs.parse(url.parse(req.url).query)
     cssFeatures(args, res)
+  } else if (/^\/css/.test(req.url)) {
+    // GET /api?..., same args and response as POST /.
+    args = qs.parse(url.parse(req.url).query)
+    args.rawCss = true
+    cssFeatures(args, res)
   } else {
     stat(req, res)
   }
