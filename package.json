@@ -36,27 +36,20 @@
   },
   "dependencies": {
     "JSONStream": "^1.0.7",
-    "concat-stream": "^1.4.7",
     "debug": "^2.1.0",
     "doiuse": "^0.2.5",
     "ecstatic": "^0.5.8",
     "from2-string": "^1.1.0",
-    "ldjson-stream": "^1.2.1",
     "mississippi": "^1.1.1",
     "mustache": "^0.8.2",
     "next-stream": "^2.1.1",
-    "node-sass": "^3.4.2",
-    "normalize.css": "^3.0.2",
     "style-stream": "^1.1.4",
-    "through2": "^0.6.3",
-    "trumpet": "^1.7.0",
     "xhr": "^2.0.0"
   },
   "devDependencies": {
     "brfs": "^1.2.0",
-    "browserify-css": "^0.2.0",
-    "node-sass": "^1.2.3",
-    "node-sass-cli": "0.0.3",
-    "watchify": "^2.2.1"
+    "browserify": "^12.0.1",
+    "node-sass": "^3.4.2",
+    "browserify-css": "^0.2.0"
   }
 }
