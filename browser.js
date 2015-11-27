@@ -111,16 +111,16 @@ document.addEventListener('DOMContentLoaded', function () {
   function update (err, response, skipHistory) {
     loading.classList.remove('show')
 
-    err = err || response.error
-    if (err) {
-      console.log('API response error', err, response)
-      var errorMarkup = mustache.render(templates.error, {
+    err = err ? [err] : response.errors
+    console.log(err)
+    var errorMarkup = err.map(function (err) {
+      return mustache.render(templates.error, {
         message: JSON.stringify(err, null, 2),
         args: response && JSON.stringify(response.args, null, 2),
         error: err
       })
-      loading.insertAdjacentHTML('beforebegin', errorMarkup)
-    }
+    })
+    loading.insertAdjacentHTML('beforebegin', errorMarkup)
 
     if (response && response.usages) {
       if (response.usages.length) {
