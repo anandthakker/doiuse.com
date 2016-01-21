@@ -35,15 +35,15 @@ var server = http.createServer(function (req, res) {
 
         try {
           args = JSON.parse(args)
+          cssFeatures(args, res)
         } catch (e) {
-          debug('Error parsing request ', args, e)
+          debug('Error parsing request ', e.toString(), args)
           res.statusCode = 400
           res.end(JSON.stringify({
             error: e.toString(),
             statusCode: 400
           }))
         }
-        cssFeatures(args, res)
       }),
       function (err) {
         if (err) { console.error(err) }
